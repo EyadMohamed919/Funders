@@ -34,6 +34,7 @@ use BankType;
 
         <label for="bank">Bank:</label>
         <select id="bank" name="bank" required>
+            <option value="blank" disabled selected>Select a bank</option>
             <?php foreach (BankType::cases() as $bank): ?>
                 <option value="<?= $bank->name ?>"><?= $bank->name ?></option>
             <?php endforeach; ?>
