@@ -22,10 +22,5 @@ else
     echo "Connected to MySQL Database";
 }
 
-function getDatabaseConnection()
-{
-    global $conn;
-    return $conn;
-}
 
 ?>
