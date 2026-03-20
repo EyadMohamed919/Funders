@@ -18,7 +18,7 @@ class DoneeModel extends UserModel
     // Getters and Setters
 
     // National ID
-    function setNationalID(string $nationalID): void
+    public function setNationalID(string $nationalID): void
     {
         $this->nationalID = $nationalID;
     }
@@ -28,41 +28,41 @@ class DoneeModel extends UserModel
     }
 
     // Bank
-    function setBank(BankType $bank): void
+    public function setBank(BankType $bank): void
     {
         $this->bank = $bank;
     }
 
-    function getBank(): BankType
+    public function getBank(): BankType
     {
         return $this->bank;
     }
 
     // Is Verified
-    function setIsVerified(bool $isVerified): void
+    public function setIsVerified(bool $isVerified): void
     {
         $this->isVerified = $isVerified;
     }
-    function getIsVerified(): bool
+    public function getIsVerified(): bool
     {
         return $this->isVerified;
     }
 
     // Proof of Case Document
-    function setProofOfCaseDocument(string $proofOfCaseDocument): void
+    public function setProofOfCaseDocument(string $proofOfCaseDocument): void
     {
         $this->proofOfCaseDocument = $proofOfCaseDocument;
     }
 
-    function getProofOfCaseDocument(): string
+    public function getProofOfCaseDocument(): string
     {
         return $this->proofOfCaseDocument;
     }
 
-    function uploadID()
+    public function uploadID()
     {
         $conn = $this->connect();
-    //    $sql = "INSERT INTO donees () VALUES ()";
+        //    $sql = "INSERT INTO donees () VALUES ()";
 
 
     }
