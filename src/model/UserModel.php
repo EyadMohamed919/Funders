@@ -30,7 +30,46 @@ class UserModel{
         if($result->num_rows > 0)
         {
             $row = $result->fetch_assoc();
-            var_dump($this->setUser($row["user_fname"], $row["user_lname"], $row["user_email"], $row["user_password"], $row["user_phone"]));
+            return $this->setUser($row["user_fname"], $row["user_lname"], $row["user_email"], $row["user_password"], $row["user_phone"]);
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public function getAllUsers()
+    {
+        $userArray = array();
+        $stmt = getDatabaseConnection()->prepare("SELECT * FROM user");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result->num_rows > 0)
+        {
+            while($row = $result->fetch_assoc())
+            {
+                $user = $this->setUser($row["user_fname"], $row["user_lname"], $row["user_email"], $row["user_password"], $row["user_phone"]);
+                array_push($userArray, $user);
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return $userArray;
+    }
+
+    public function updateUser($id, $fname, $lname, $email, $phone, $password)
+    {
+        $stmt = getDatabaseConnection()->prepare("UPDATE user SET 
+        user_fname = ?, user_lname = ?, user_email = ?, user_password = ?, user_phone = ?
+        WHERE user_id = ?");
+        $stmt->bind_param("ssssii", $fname, $lname, $email, $password, $phone, $id);
+        $stmt->execute();
+        if ($stmt->affected_rows > 0) 
+        {
+            return 1;
         }
         else
         {
@@ -39,6 +78,7 @@ class UserModel{
     }
 } 
 
-$user = new UserModel();
-$user->getUser("eyad@gmail.com", 1234);
+// TESTING CODE
+// $user = new UserModel();
+// var_dump($user->updateUser(2, "Hamada", "Mohamed", "hamada.mohamed@gmail.com", 115487653, "123"));
 ?>
