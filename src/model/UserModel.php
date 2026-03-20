@@ -2,13 +2,27 @@
 require_once("../../config/db.php");
 
 class UserModel {
+    private $id;
     private $fname;
     private $lname;
     private $password;
     private $email;
     private $phone;
 
-    public function setUser($fname, $lname, $email, $password, $phone) {
+    public function getId() { return $this->id; }
+    public function getFname() { return $this->fname; }
+    public function getLname() { return $this->lname; }
+    public function getEmail() { return $this->email; }
+    public function getPhone() { return $this->phone; }
+
+    public function setFname($fname) { $this->fname = htmlspecialchars(trim($fname)); }
+    public function setLname($lname) { $this->lname = htmlspecialchars(trim($lname)); }
+    public function setEmail($email) { $this->email = filter_var(trim($email), FILTER_SANITIZE_EMAIL); }
+    public function setPhone($phone) { $this->phone = htmlspecialchars(trim($phone)); }
+    public function setPassword($password) { $this->password = password_hash($password, PASSWORD_DEFAULT); }
+
+    public function setUser($id, $fname, $lname, $email, $password, $phone) {
+        $this->id    = $id;
         $this->fname    = htmlspecialchars(trim($fname));
         $this->lname    = htmlspecialchars(trim($lname));
         $this->email    = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
@@ -31,6 +45,7 @@ class UserModel {
             if (password_verify($password, $row["user_password"])) {
                 $user = new self();
                 return $user->setUser(
+                    $row["user_id"],
                     $row["user_fname"], 
                     $row["user_lname"], 
                     $row["user_email"], 
@@ -51,6 +66,7 @@ class UserModel {
         while ($row = $result->fetch_assoc()) {
             $user = new self();
             $user->setUser(
+                $row["user_id"],
                 $row["user_fname"], 
                 $row["user_lname"], 
                 $row["user_email"], 
