@@ -5,7 +5,7 @@ include_once "adminView.php";
 $model = new Model();
 $view  = new AdminView();
 
-// only fetch + display
+// only fetch & display
 $data = $model->getAll();
 $view->showAll($data);
 ?>

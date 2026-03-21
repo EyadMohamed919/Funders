@@ -1,26 +1,29 @@
-<?php
-
+<?php 
 class AdminView
 {
-
-    function showAll($obj)
+    function showAll($data)
     {
-        foreach ($obj as $row){
-        echo "<table border=1><tr><td>Subscription ID</td> <td>".$obj->SubscripitionID."</td>";
-        echo "</tr>";
-        
-        echo "<tr><td>Document URL</td> <td>".$obj->DocumentURL."</td>";
-        echo "</tr>";
-        
-        echo "<tr><td>Timestamp</td> <td>".$obj->Timestamp."</td>";
-        echo "</tr>";
+        echo "<table border=1>";
+        echo "<tr>
+                <th>Subscription ID</th>
+                <th>Document URL</th>
+                <th>Timestamp</th>
+                <th>Decision</th>
+              </tr>";
 
-        echo "<tr><td>Decision</td> <td><a href='./approve.php?id=".$obj->SubscriptionID."' class='btn btn-primary'>Approve</a>
-        <a href='./reject.php?id=".$obj->SubscriptionID."' class='btn btn-primary'>Reject</a></td>";
-        echo "</tr>";
+        foreach ($data as $row){
+            echo "<tr>";
+            echo "<td>".$row['SubscriptionID']."</td>";
+            echo "<td>".$row['DocumentURL']."</td>";
+            echo "<td>".$row['TimeStamp']."</td>";
+            echo "<td>
+                    <a href='./approve.php?id=".$row['SubscriptionID']."'>Approve</a>
+                    <a href='./reject.php?id=".$row['SubscriptionID']."'>Reject</a>
+                  </td>";
+            echo "</tr>";
+        }
 
         echo "</table>";
-        }
     }
 }
 ?>
