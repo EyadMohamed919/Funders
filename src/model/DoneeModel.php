@@ -13,8 +13,6 @@ public function __construct()
     parent::__construct();
 }
 
-
-
         // file path to the document 
         // (may be hashed/encrypted) example "uploads/proof_of_case/12313123242553959695946784964.pdf"
         // TODO: implement file upload and storage logic in the controller, 
@@ -94,16 +92,19 @@ public function getDonee($email, $password)
                 $row["user_email"],
                 $row["user_password"],
                 $row["user_phone"],
-                $row["national_id"],
-                BankType::{$row["bank_name"]},
-                $row["proof_of_case_document"]
+                $row["donee_national_id"],
+                BankType::from($row["donee_bank_name"]),
+                $row["donee_proof_of_case_document"]
             );
         }
     }
     return false;
 }
 
-
+/* this method retrieves all donees from the database, 
+creates DoneeModel objects for each record, and returns them as an array. 
+If no donees are found, it returns false.
+*/
 #[\Override]
 public function getAllUsers(): array
 {
@@ -111,7 +112,6 @@ public function getAllUsers(): array
     $stmt = getDatabaseConnection()->prepare("SELECT * FROM donees");
     $stmt->execute();
     $result = $stmt->get_result();
-
     while ($row = $result->fetch_assoc()) {
         $donee = new self();
         $donee->setDonee(
@@ -121,9 +121,9 @@ public function getAllUsers(): array
             $row["user_email"],
             $row["user_password"],
             $row["user_phone"],
-            $row["national_id"],
-            BankType::{$row["bank_name"]},
-            $row["proof_of_case_document"]
+            $row["donee_national_id"],
+            BankType::from($row["donee_bank_name"]),
+            $row["donee_proof_of_case_document"]
         );
         $doneeArray[] = $donee;
     }
@@ -137,7 +137,7 @@ public function updateUser($id, $fname, $lname, $email, $phone, $password): bool
     parent::updateUser($id, $fname, $lname, $email, $phone, $password);
 
     $stmt = getDatabaseConnection()->prepare("UPDATE donees SET 
-        national_id = ?, bank_name = ?, proof_of_case_document = ?
+        donee_national_id = ?, donee_bank_name = ?, donee_proof_of_case_document = ?
         WHERE user_id = ?");
 
     $stmt->bind_param("sssi", $this->nationalID, $this->bank->value, $this->proofOfCaseDocument, $id);
