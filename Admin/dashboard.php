@@ -16,6 +16,7 @@ $data = $model->getAll();
 </head>
 
 <body>
+<a href="AdminMangement.php" class="btn btn-primary">Manage Admins</a>
 <section class="ftco-section">
     <div class="container">
         <h4 class="text-center mb-4">Administration Table</h4>

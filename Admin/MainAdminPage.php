@@ -1,16 +1,14 @@
 <?php
-
 session_start();
+require_once "adminModel.php";
 
-$valid_username = "admin";
-$valid_password = "admin";
-
+$model = new Model();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
-    if ($username === $valid_username && $password === $valid_password) {
+    if ($model->checkAdmin($username, $password)) {
         $_SESSION["admin"] = $username;
         header("Location: dashboard.php");
         exit();
