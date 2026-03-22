@@ -1,14 +1,14 @@
 <?php
-enum BankType {
-    case CentralBankofEgypt;
-    case CIB;
-    case HSBC;
-    case Adib;
-    case QNB;
-    case NationalBankofEgypt;
-    case BanqueDuCaire;
-    case BankofAlexandria;
-    case BankofCairo;
-    case BankofGiza;
-    case OtherBank;
+enum BankType: string {
+    case CentralBankofEgypt  = 'CentralBankofEgypt';
+    case CIB                 = 'CIB';
+    case HSBC                = 'HSBC';
+    case Adib                = 'Adib';
+    case QNB                 = 'QNB';
+    case NationalBankofEgypt = 'NationalBankofEgypt';
+    case BanqueDuCaire       = 'BanqueDuCaire';
+    case BankofAlexandria    = 'BankofAlexandria';
+    case BankofCairo         = 'BankofCairo';
+    case BankofGiza          = 'BankofGiza';
+    case OtherBank           = 'OtherBank';
 }

@@ -62,6 +62,9 @@ public function __construct()
 
 
         // }
+
+/* here we set the Donee object properties using the parent setUser 
+ method for common user fields and then set the donee-specific fields.*/
   public function setDonee($id, $fname, $lname, $email, $password, $phone,
     string $nationalID, BankType $bank, string $proofOfCaseDocument = ""): self
 {
@@ -71,7 +74,6 @@ public function __construct()
     $this->proofOfCaseDocument = $proofOfCaseDocument;
     return $this;
 }
-
 
 public function getDonee($email, $password)
 {
@@ -101,8 +103,6 @@ public function getDonee($email, $password)
     return false;
 }
 
-
-        // functions related to doneemodel here
 
 #[\Override]
 public function getAllUsers(): array
@@ -140,7 +140,7 @@ public function updateUser($id, $fname, $lname, $email, $phone, $password): bool
         national_id = ?, bank_name = ?, proof_of_case_document = ?
         WHERE user_id = ?");
 
-    $stmt->bind_param("sssi", $this->nationalID, $this->bank->name, $this->proofOfCaseDocument, $id);
+    $stmt->bind_param("sssi", $this->nationalID, $this->bank->value, $this->proofOfCaseDocument, $id);
     $stmt->execute();
 
     return $stmt->affected_rows >= 0;
