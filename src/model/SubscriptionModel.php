@@ -46,9 +46,11 @@ class Subscription{
         $currentDate = $currentDate->format('Y-m-d');
         $status = "active";
 
-        $stmt = getDatabaseConnection()->prepare("INSERT INTO subscription(user_id, subscription_frequency, subscription_next_billing, subscription_status, subscription_creation_date)
+        $stmt = getDatabaseConnection()->prepare("INSERT INTO subscription(user_id, subscription_frequency, 
+        subscription_next_billing, subscription_status, 
+        subscription_creation_date)
         VALUES(?, ?, ?, ?)");
-        $stmt->bind_param("issss", $userID, $frequency, $db_date, $status,$currentDate);
+        $stmt->bind_param("issss", $userID, $frequency, $db_date, $status,$currentDate, "00000");
         $stmt->execute();
 
         if($stmt->affected_rows > 0)
