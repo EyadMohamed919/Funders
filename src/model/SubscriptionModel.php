@@ -7,28 +7,33 @@ class Subscription{
     private $subscriptionID;
     private $frequency;
     private $nextBillingDate;
+    private $status;
+    private $userID;
+    private $amount;
+    private $gatewayId;
 
-    public function createSubscription($frequency, $userID)
+    public function createSubscription($amount, $frequency, $userID)
     {
-        $frequency = htmlspecialchars(trim($frequency));
+        $this->userID = $userID;
+        $this->frequency = htmlspecialchars(trim($frequency));
+        $this->amount = $amount;
+        $this->gatewayId = 0;
 
-        if($frequency == "monthly")
+        if($this->frequency == "monthly")
         {
             $date = new DateTime();
     
             $date->modify('+30 days');
     
-            $db_date = $date->format('Y-m-d');
-    
-            echo "The date 30 days from now is: " . $db_date;
+            $this->nextBillingDate = $date->format('Y-m-d');
         }
-        else if($frequency == "weekly")
+        else if($this->frequency == "weekly")
         {
             $date = new DateTime();
     
             $date->modify('+7 days');
     
-            $db_date = $date->format('Y-m-d');
+            $this->nextBillingDate = $date->format('Y-m-d');
     
         }
         else
@@ -37,24 +42,24 @@ class Subscription{
     
             $date->modify('+30 days');
     
-            $db_date = $date->format('Y-m-d');
-    
-            echo "The date 30 days from now is: " . $db_date;
+            $this->nextBillingDate = $date->format('Y-m-d');
         }
 
         $currentDate = new DateTime();
         $currentDate = $currentDate->format('Y-m-d');
-        $status = "active";
-
-        $stmt = getDatabaseConnection()->prepare("INSERT INTO subscription(user_id, subscription_frequency, 
-        subscription_next_billing, subscription_status, 
-        subscription_creation_date)
-        VALUES(?, ?, ?, ?)");
-        $stmt->bind_param("issss", $userID, $frequency, $db_date, $status,$currentDate, "00000");
+        $this->status = "active";
+        $conn = getDatabaseConnection();
+        $stmt = $conn->prepare("INSERT INTO subscription(user_id, subscription_frequency, 
+        subscription_next_billing_date, subscription_status, 
+        subscription_creation_date, subscription_gateway_id, subscription_amount)
+        VALUES(?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("issssid", $userID, $this->frequency, $this->nextBillingDate, $this->status, $currentDate, $this->gatewayId, $this->amount);
         $stmt->execute();
+        
 
         if($stmt->affected_rows > 0)
         {
+            $this->subscriptionID = $conn->insert_id;
             return 1;
         }
         else

@@ -10,10 +10,10 @@
 </head>
 <body>
     
-    <form action="">
+    <form action="../../router/SubscriptionRouter.php" method="post">
         <h1>Subscription</h1>
         <p>Subscribe to a recurring amount to be payed randomly</p>
-        <input type="number" id="amount" placeholder="500">
+        <input type="number" id="amount" name="amount" placeholder="500">
     </input>
     <h2>Quick amounts: </h2>
         <ul>
@@ -26,7 +26,7 @@
 
         <div class="frequency">
             I want to pay this amount every 
-            <select name="" id="">
+            <select name="frequency" id="">
                <option value="monthly">Monthly</option>
                <option value="wonthly">Weekly</option> 
             </select>

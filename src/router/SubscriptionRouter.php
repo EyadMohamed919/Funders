@@ -1,10 +1,16 @@
 <?php
-require_once("../controller/UserController.php");
+require_once("../controller/SubscriptionController.php");
 if(isset($_POST))
 {
-    if($_POST["router"] == "login")
+    session_start();
+    if(!isset($_SESSION["user_id"]))
     {
-        UserController::login($_POST["email"], $_POST["password"]); 
+        header("location: ../view/layout/Login.php");
+    }
+    else
+    {
+
+        SubscriptionController::subscribe($_POST["amount"], $_POST["frequency"], $_SESSION["user_id"]);
     }
 } 
 ?>
