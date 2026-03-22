@@ -5,7 +5,7 @@ class CategoryController{
     public static function index(){
         $categoryModel = new CategoryModel();
         $categories = $categoryModel->getAllCategories();
-        include("../view/category/index.php");
+        include("../view/categories/index.php");
     }
 
     //show single category
@@ -30,8 +30,9 @@ class CategoryController{
             return;
         }
         $categoryModel = new CategoryModel();
-        $categoryModel->createCategory($name);
-        header("Location: /categories");
+        $categoryModel->setName($name);
+        $categoryModel->createCategory();
+        header("Location: /src/router/CategoryRouter.php");
         exit();
     }
     //update category
@@ -43,15 +44,17 @@ class CategoryController{
             return;
         }
         $categoryModel = new CategoryModel();
-        $categoryModel->updateCategory($id, $name);
-        header("Location: /categories");
+        $categoryModel->setCategory($id, $name);
+        $categoryModel->updateCategory();
+        header("Location: /src/router/CategoryRouter.php");
         exit();
     }
     //delete category
     public static function delete($id){
         $categoryModel = new CategoryModel();
-        $categoryModel->deleteCategory($id);
-        header("Location: /categories");
+        $categoryModel->setCategory($id, '');
+        $categoryModel->deleteCategory();
+        header("Location: /src/router/CategoryRouter.php");
         exit();
     }
 }
