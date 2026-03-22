@@ -43,7 +43,7 @@ class DonationModel{
 
     public function UpdateDonation($donation_id, $donation_amount, $donation_date, $user_id) {
         $stmt = getDatabaseConnection()->prepare("UPDATE donation SET donation_amount = ?, donation_date = ? WHERE donation_id = ? AND user_id = ?");
-        $stmt->bind_param("ssi", $donation_amount, $donation_date, $donation_id, $user_id);
+        $stmt->bind_param("ssii", $donation_amount, $donation_date, $donation_id, $user_id);
         return $stmt->execute();
     }
 
