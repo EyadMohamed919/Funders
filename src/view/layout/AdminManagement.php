@@ -1,5 +1,9 @@
 <?php
-
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] == null) {
+    header("location: /src/view/layout/Login.php");
+    exit();
+}
 require_once __DIR__ . "/../../controller/AdminController.php";
 $admin = new AdminController();
 

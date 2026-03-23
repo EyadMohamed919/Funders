@@ -11,6 +11,7 @@ else if(isset($_GET))
 {
     if(isset($_GET["logout"]))
     {
+        session_start();
         session_destroy();
         header("location: ../view/layout/Login.php");
     }
