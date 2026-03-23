@@ -48,5 +48,23 @@ class DonorModel extends UserModel{
 
     }
 
+
+    public function setLaundering($state)
+    {
+        $stmt = getDatabaseConnection()->prepare("UPDATE donor SET donor_laundering = ?");
+        $stmt->bind_param("i", $state);
+        $stmt->execute();
+        
+        if($stmt->affected_rows > 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
 }
 ?>
