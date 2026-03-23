@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("location: /src/view/layout/Login.php");
+    exit();
+}
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
