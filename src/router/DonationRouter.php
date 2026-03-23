@@ -13,13 +13,17 @@ switch ($method) {
         }
         break;
     case 'POST':
-        $controller->addDonation();
-        break;
-    case 'PUT':
-        $controller->updateDonation();
-        break;
-    case 'DELETE':
-        $controller->deleteDonation();
+        if($_POST["router"] == "create")
+        {
+            $controller->addDonation();
+        }
+        else if ($_POST["router"] == "delete") {
+            $controller->deleteDonation();
+        }
+        else
+        {
+            $controller->updateDonation();
+        }
         break;
     default:
         http_response_code(405);

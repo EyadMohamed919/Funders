@@ -23,16 +23,17 @@ class DonationController {
     }
 
     public function addDonation(){
-        $data= json_decode(file_get_contents('php://input'), true);
-        if (empty($data['user_id']) || empty($data['donation_amount'])|| empty($data['donation_id'])) {
+        
+        $_POST= json_decode(file_get_contents('php://input'), true);
+        if (empty($_POST['user_id']) || empty($_POST['donation_amount'])|| empty($_POST['donation_id'])) {
             http_response_code(400);
             echo json_encode(['error' => 'donation_id, user_id, or donation_amount is missing']);
             return;
         }
         $success= $this->DonationModel->addDonation(
-            $data['user_id'], 
-            $data['donation_amount'], 
-            $data['donation_id']);
+            $_POST['user_id'], 
+            $_POST['donation_amount'], 
+            $_POST['donation_id']);
         if ($success) {
             http_response_code(201);
             echo json_encode(['message' => 'Donation added successfully']);
@@ -43,20 +44,20 @@ class DonationController {
     }
 
     public function updateDonation() {
-    $data = json_decode(file_get_contents("php://input"), true);
+    $_POST = json_decode(file_get_contents("php://input"), true);
 
-    if (empty($data['donation_id']) || empty($data['donation_amount']) || 
-        empty($data['donation_date'])  || empty($data['user_id'])) {
+    if (empty($_POST['donation_id']) || empty($_POST['donation_amount']) || 
+        empty($_POST['donation_date'])  || empty($_POST['user_id'])) {
         http_response_code(400);
         echo json_encode(['error' => 'All fields are required']);
         return;
     }
-
+    
     $success = $this->DonationModel->UpdateDonation(
-        $data['donation_id'],
-        $data['donation_amount'],
-        $data['donation_date'],
-        $data['user_id']
+        $_POST['donation_id'],
+        $_POST['donation_amount'],
+        $_POST['donation_date'],
+        $_POST['user_id']
     );
     if ($success) {
             http_response_code(201);
@@ -68,15 +69,15 @@ class DonationController {
     }
 
     public function deleteDonation(){
-        $data= json_decode(file_get_contents('php://input'), true);
-        if (empty($data['donation_id'] || empty($data['user_id']))) {
+        $_POST= json_decode(file_get_contents('php://input'), true);
+        if (empty($_POST['donation_id'] || empty($_POST['user_id']))) {
             http_response_code(400);
             echo json_encode(['error' => 'donation_id and user_id are required']);
             return;
         }
         $success = $this->DonationModel->deleteDonation(
-            $data['donation_id'], 
-            $data['user_id']);
+            $_POST['donation_id'], 
+            $_POST['user_id']);
         if ($success) {
             http_response_code(200);
             echo json_encode(['message' => 'Donation deleted successfully']);
