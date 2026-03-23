@@ -10,11 +10,12 @@ for ($i=0; $i < count($posts); $i++) {
     // var_dump($json);
     // $data = json_decode($json);
     // $imageUrl = $data->message;
+    $jsonPost = htmlspecialchars(json_encode($posts[$i]), ENT_QUOTES, 'UTF-8');
 
     $percent = ($posts[$i]->getCurrentAmount() / $posts[$i]->getTargetAmount()) * 100;
 
 
-    echo "<div class='post-card'>";
+    echo "<div onclick='checkDetails(" . $jsonPost . ")' class='post-card'>";
         echo "<div class='post-image' style='background-image:url(https://picsum.photos/1000/1200)'></div>";
         echo "<h3>" . $posts[$i]->getTitle() . "</h3>";
         if(strlen($posts[$i]->getDescription()) > 50)

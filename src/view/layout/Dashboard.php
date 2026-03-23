@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Maven+Pro:wght@400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../public/css/dashboardStyle.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Funders</title>
 </head>
 <body>
@@ -19,7 +20,16 @@
         </div>
 
         <div class="post-details">
-            
+            <div class="post-details-image"></div>
+            <h1>Title</h1>
+            <p>Description</p>
+
+            <p><strong>3400EGP / 8600EGP</strong></p>
+            <div class='bar'>
+                <h4>30% reached <br><i class="fa-solid fa-caret-down"></i></h4>
+                <div class='bar-overlay'></div>
+            </div>
+            <a href="#"><i class="fa-solid fa-hand-holding-dollar"></i>Donate</a>
         </div>
     </section>
 </body>

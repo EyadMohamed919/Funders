@@ -32,7 +32,117 @@ section{
     border-radius: 20px;
     border: 1px solid #007826;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.post-details{
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    padding: 10px;
+}
+
+.post-details-image{
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 0;
+    width: 100%;
+    height: 250px;
+    background-image: url("https://picsum.photos/1000/1200");
+    background-position: center;
+    background-size: cover;
+    border-radius: 15px;
+}
+
+.post-details h1{
+    margin: auto;
+    margin-left: 0;
+    margin-top: 10px;
+    margin-bottom: 0;
+    color: #007826;
+}
+
+.post-details p{
+    margin: auto;
+    margin-left: 0;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.post-details a{
+    margin: auto;
+    margin-bottom: 10px;
+    width: 100%;
+    height: fit-content;
+    padding-block: 10px;
+    font-size: 1.4rem;
+    background-color: #009830;
+    color: white;
+    text-decoration: none;
+    border-radius: 60px;
+    transition: 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-details a:hover{
+    background-color: black;
+}
+
+.post-details i{
+    margin-right: 10px;
+}
+
+.bar{
+    position: relative;
+    width: 100%;
+    height: 10px;
+    border-radius: 10px;
+    background-color: #00782648;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.bar h4{
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+    color: #009830;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    left: 30%;
+    top: -50;
+    transform: translate(-50%, -50%);
+}
+
+.bar-overlay{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 10px;
+    border-radius: 10px;
+    background-color: #007826;
+    margin: auto;
+}
+
+
+
+
+
+
+
+
+
+
 
 .post-container{
     position: relative;
