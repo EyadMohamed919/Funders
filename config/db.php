@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 }
 else
 {
-    echo "Connected to MySQL Database";
+    // echo "Connected to MySQL Database";
 }
 
 function getDatabaseConnection()
