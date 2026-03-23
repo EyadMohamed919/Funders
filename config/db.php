@@ -21,6 +21,7 @@ else
 {
     //Remove el comment law 3ayez to debug bas
     //echo "Connected to MySQL Database";
+    // echo "Connected to MySQL Database";
 }
 
 function getDatabaseConnection()
