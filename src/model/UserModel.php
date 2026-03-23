@@ -116,6 +116,8 @@ class UserModel {
 
         if($stmt->affected_rows > 0)
         {
+            $id = $conn->insert_id;
+            $this->id = $conn->insert_id;
             return $conn->insert_id;
         }
         else

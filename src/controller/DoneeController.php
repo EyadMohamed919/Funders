@@ -1,6 +1,6 @@
 <?php
 require_once("../model/DoneeModel.php");
-
+require_once("../model/UserModel.php");
 class DoneeController extends UserController
 {
 
@@ -33,24 +33,33 @@ class DoneeController extends UserController
 
 
     public static function register()
-{
-    session_start();
-    $donee = new DoneeModel();
-    $donee->setDonee(
-        null, // no id yet, DB generates it
-        $_POST['fname'],
+    {
+        session_start();
+        $donee = new DoneeModel();
+        $user = new UserModel();
+        $userID = $user->createUser(
+            $_POST['fname'],
         $_POST['lname'],
         $_POST['email'],
         $_POST['password'],
-        $_POST['phone'],
-        $_POST['donee_national_id'],
-        BankType::from($_POST['donee_bank_name']),
-        // self::uploadProofOfCase()
-    );
-   $donee->register();
-    header("Location: /login");
-    exit();
-}
+        $_POST['phone'],);
+
+
+        $donee->setDonee(
+            $userID,
+            $_POST['fname'],
+            $_POST['lname'],
+            $_POST['email'],
+            $_POST['password'],
+            $_POST['phone'],
+            $_POST['donee_national_id'],
+            BankType::from($_POST['donee_bank_name']),
+            // self::uploadProofOfCase()
+        );
+    $donee->register($userID);
+        header("Location: /login");
+        exit();
+    }
 
 // TODO: not implemented updateDonee() method for the Donee
     // private static function uploadProofOfCase(): string
