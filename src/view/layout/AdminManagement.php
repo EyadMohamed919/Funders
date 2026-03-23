@@ -54,6 +54,6 @@ if($checkadmin == 0)
         <button type="submit">Add</button>
     </form>
 
-    <a href="MainAdminPage.php">Return to Main Page</a>
+    <a href="AdminDashboard.php">Return to Admin Dashboard</a>
 </body>
 </html>
