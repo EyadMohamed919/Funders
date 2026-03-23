@@ -21,16 +21,18 @@
 
         <div class="post-details">
             <div class="post-details-image"></div>
-            <h1>Title</h1>
-            <p>Description</p>
+            <h1 id="title">Title</h1>
+            <p id="description">Description</p>
 
-            <p><strong>3400EGP / 8600EGP</strong></p>
+            <p id="amount"><strong>3400EGP / 8600EGP</strong></p>
             <div class='bar'>
-                <h4>30% reached <br><i class="fa-solid fa-caret-down"></i></h4>
-                <div class='bar-overlay'></div>
+                <h4 id="target">30% reached <br><i class="fa-solid fa-caret-down"></i></h4>
+                <div id="bar" class='bar-overlay'></div>
             </div>
-            <a href="#"><i class="fa-solid fa-hand-holding-dollar"></i>Donate</a>
+            <a id="link" href="#"><i class="fa-solid fa-hand-holding-dollar"></i>Donate</a>
         </div>
     </section>
+
+    <script src="../../../public/scripts/checkDetailsScript.js"></script>
 </body>
 </html>

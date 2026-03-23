@@ -109,7 +109,7 @@ section{
     margin-bottom: 10px;
 }
 
-.bar h4{
+#target{
     position: absolute;
     height: fit-content;
     width: fit-content;
@@ -118,20 +118,20 @@ section{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    left: 30%;
     top: -50;
     transform: translate(-50%, -50%);
+    transition: 0.2s;
 }
 
 .bar-overlay{
     position: absolute;
     left: 0;
     top: 0;
-    width: 30%;
     height: 10px;
     border-radius: 10px;
     background-color: #007826;
     margin: auto;
+    transition: 0.2s;
 }
 
 

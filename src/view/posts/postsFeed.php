@@ -10,7 +10,12 @@ for ($i=0; $i < count($posts); $i++) {
     // var_dump($json);
     // $data = json_decode($json);
     // $imageUrl = $data->message;
-    $jsonPost = htmlspecialchars(json_encode($posts[$i]), ENT_QUOTES, 'UTF-8');
+
+    $jsonArray = [$posts[$i]->getId(), $posts[$i]->getTitle(), 
+    $posts[$i]->getDescription(), $posts[$i]->getCurrentAmount()
+    , $posts[$i]->getTargetAmount(), $posts[$i]->getStatus()];
+
+    $jsonPost = htmlspecialchars(json_encode($jsonArray), ENT_QUOTES, 'UTF-8');
 
     $percent = ($posts[$i]->getCurrentAmount() / $posts[$i]->getTargetAmount()) * 100;
 
