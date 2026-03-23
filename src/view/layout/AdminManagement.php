@@ -1,7 +1,15 @@
 <?php
-
+session_start();
+require_once __DIR__ . "/../../model/AdminModel.php";
 require_once __DIR__ . "/../../controller/AdminController.php";
 $admin = new AdminController();
+
+$checkadmin = $admin->checkAdmin($_SESSION['user_id']);
+if($checkadmin == 0)
+{
+    header("location: /src/view/layout/Login.php");
+    exit();
+}
 
 ?>
 <html lang="en">

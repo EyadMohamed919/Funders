@@ -1,6 +1,6 @@
 <?php
-require_once("../model/UserModel.php");
-require_once("../model/AdminModel.php");
+require_once __DIR__ . "/../model/UserModel.php";
+require_once __DIR__ . "/../model/AdminModel.php";
 class UserController{
     public static function login()
     {

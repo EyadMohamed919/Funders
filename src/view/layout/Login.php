@@ -19,6 +19,7 @@
         {
             echo '<p class="error">' . $_SESSION["LOGIN_ERROR"] . '</p>';
         }
+     
         ?>
             <div class="form-group">
                 <label class="input-label" for="email">Email Address</label>

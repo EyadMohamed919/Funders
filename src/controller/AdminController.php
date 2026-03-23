@@ -2,6 +2,13 @@
 require_once __DIR__ . "/../model/AdminModel.php";
 require_once __DIR__ . "/../model/UserModel.php";
 class AdminController{
+    public static function checkAdmin($userID)
+    {
+        $admin = new AdminModel();
+
+        return $admin->checkAdmin($userID);
+    }
+
     public static function getAllAdmin()
     {
         $admin = new AdminModel();
