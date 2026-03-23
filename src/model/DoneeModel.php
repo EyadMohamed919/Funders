@@ -53,16 +53,6 @@ class DoneeModel extends UserModel
         return $this->proofOfCaseDocument;
     }
 
-    // public function uploadID()
-    // {
-    //     $conn = $this->connect();
-    //     //    $sql = "INSERT INTO donees () VALUES ()";
-
-
-    // }
-
-    /* here we set the Donee object properties using the parent setUser 
-     method for common user fields and then set the donee-specific fields.*/
     public function setDonee(
         $id,
         $fname,

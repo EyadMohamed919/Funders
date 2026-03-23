@@ -3,22 +3,49 @@ require_once("../model/DoneeModel.php");
 
 class DoneeController extends UserController
 {
-    public static function update()
+
+    #[\override]
+    public static function login()
     {
-        $donee = new DoneeModel();
-        $donee->getDonee($_SESSION['user_email'], $_POST['password']); // load existing donee
+        $email = $_POST['email'] ?? '';
+        $pass = $_POST['password'] ?? '';
 
-        $donee->setNationalID($_POST['donee_national_id']);
-        $donee->setBank(BankType::from($_POST['donee_bank_name']));
-        $donee->setProofOfCaseDocument($_POST['donee_proof_of_case_document']);
+        $DoneeModel = new DoneeModel();
+        $userData = $DoneeModel->getDonee($email, $pass);
 
-        $donee->updateUser(
-            $_SESSION['user_id'],
-            $_POST['fname'],
-            $_POST['lname'],
-            $_POST['email'],
-            $_POST['phone'],
-            $_POST['password']
-        );
+        if ($userData) {
+            session_start();
+            $_SESSION['user_id'] = $userData->getId();
+            $_SESSION['user_fname'] = $userData->getFname();
+            $_SESSION['user_lname'] = $userData->getLname();
+            $_SESSION['user_email'] = $userData->getEmail();
+            $_SESSION['user_phone'] = $userData->getPhone();
+            $_SESSION['LOGIN_ERROR'] = null;
+
+            header("Location: /dashboard");
+            exit();
+        } else {
+            session_start();
+            $_SESSION['LOGIN_ERROR'] = "Incorrect email or password";
+            header("location:../view/layout/login.php");
+        }
+    }
+    
+    private static function uploadProofOfCase(): string
+    {
+        $file = $_FILES['proof_of_case_document'];
+
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception("File upload failed.");
+        }
+
+        $filename = hash('sha256', time() . $_SESSION['user_fname']) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+        $path = "uploads/{$_SESSION['user_id']}/proofofcase/{$filename}";
+        $absolutePath = __DIR__ . "/../../{$path}";
+
+        mkdir(dirname($absolutePath), 0700, true);
+        move_uploaded_file($file['tmp_name'], $absolutePath);
+
+        return $path;
     }
 }

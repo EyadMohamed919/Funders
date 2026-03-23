@@ -1,10 +1,11 @@
 <?php
 require_once("../model/UserModel.php");
-class UserController{
+class UserController
+{
     public static function login()
     {
         $email = $_POST['email'] ?? '';
-        $pass  = $_POST['password'] ?? '';
+        $pass = $_POST['password'] ?? '';
 
         $userModel = new UserModel();
         $userData = $userModel->getUser($email, $pass);
@@ -17,7 +18,7 @@ class UserController{
             $_SESSION['user_email'] = $userData->getEmail();
             $_SESSION['user_phone'] = $userData->getPhone();
             $_SESSION['LOGIN_ERROR'] = null;
-            
+
             header("Location: /dashboard");
             exit();
         } else {
