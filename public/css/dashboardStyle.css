@@ -1,0 +1,91 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: white;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+}
+
+nav{
+    height: 10%;
+    background-color: #007826;
+    width: 95%;
+    margin: auto;
+    margin-top: 0;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    font-size: 1.6rem;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section{
+    width: 95%;
+    height: 85%;
+    margin: auto;
+    border-radius: 20px;
+    border: 1px solid #007826;
+    overflow: hidden;
+}
+
+.post-container{
+    position: relative;
+    width: 35%;
+    height: 100%;
+    margin: auto;
+    margin-left: 0;
+    background-color: rgb(189, 223, 198);
+    overflow-y: scroll;
+    overflow-x: visible;
+    padding: 10px;
+}
+
+.post-card{
+    width: 90%;
+    height: fit-content;
+    background-color: white;
+    margin: auto;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.post-card h3{
+    color: #007826;
+}
+
+.post-image{
+    width: 100%;
+    height: 180px;
+    /* background-image: url("https://picsum.photos/200/300"); */
+    border-radius: 10px;
+    background-position: center;
+    background-size: cover;
+    /* background: linear-gradient(45deg, #3b6749, #6d9379); */
+}
+
+.post-bar{
+    position: relative;
+    width: 100%;
+    height: 5px;
+    border-radius: 10px;
+    background-color: #00782648;
+    margin: auto;
+}
+
+.post-bar-overlay{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 5px;
+    border-radius: 10px;
+    background-color: #007826;
+    margin: auto;
+}
