@@ -1,6 +1,6 @@
 <?php
-require_once("../../config/db.php");
-require_once("InvoiceInterface.php");
+require_once __DIR__ . "/../../config/db.php";
+require_once __DIR__ . "/InvoiceInterface.php";
 
 class InvoiceModel implements InvoiceInterface {
     public $invoice_id;
@@ -59,13 +59,13 @@ class InvoiceModel implements InvoiceInterface {
 
     public function addInvoice($user_id, $amount, $status, $due_date) {
         $created_at = date('Y-m-d H:i:s');
-        $stmt = getDatabaseConnection()->prepare("INSERT INTO invoice (user_id, amount, status, created_at, due_date) VALUES (?, ?, ?, ?, ?)");
+        $stmt = getDatabaseConnection()->prepare("INSERT INTO invoice (user_id, invoice_amount, invoice_status, invoice_created_at, invoice_due_date) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("idsss", $user_id, $amount, $status, $created_at, $due_date);
         return $stmt->execute();
     }
 
     public function updateInvoiceStatus($invoice_id, $status) {
-        $stmt = getDatabaseConnection()->prepare("UPDATE invoice SET status = ? WHERE invoice_id = ?");
+        $stmt = getDatabaseConnection()->prepare("UPDATE invoice SET invoice_status = ? WHERE invoice_id = ?");
         $stmt->bind_param("si", $status, $invoice_id);
         return $stmt->execute();
     }

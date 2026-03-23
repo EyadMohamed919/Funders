@@ -1,5 +1,5 @@
 <?php
-require_once("../model/InvoiceModel.php");
+require_once __DIR__ . "/../model/InvoiceModel.php";
 
 class InvoiceController {
     private $InvoiceModel;
@@ -26,10 +26,19 @@ class InvoiceController {
     }
 
     public function addInvoice() {
-        $_POST = json_decode(file_get_contents('php://input'), true);
         if (empty($_POST['user_id']) || empty($_POST['amount']) || empty($_POST['status']) || empty($_POST['due_date'])) {
             http_response_code(400);
             echo json_encode(['error' => 'user_id, amount, status and due_date are required']);
+            return;
+        }
+
+        // Check if user exists
+        $stmt = getDatabaseConnection()->prepare("SELECT user_id FROM users WHERE user_id = ?");
+        $stmt->bind_param("i", $_POST['user_id']);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows == 0) {
+            http_response_code(400);
+            echo json_encode(['error' => 'User does not exist']);
             return;
         }
 
@@ -41,8 +50,8 @@ class InvoiceController {
         );
 
         if ($success) {
-            http_response_code(201);
-            echo json_encode(['message' => 'Invoice created']);
+            header("Location: /src/view/layout/invoice.php");
+            exit;
         } else {
             http_response_code(500);
             echo json_encode(['error' => 'Failed to create invoice']);
@@ -50,7 +59,6 @@ class InvoiceController {
     }
 
     public function updateInvoice() {
-        $_POST = json_decode(file_get_contents('php://input'), true);
         if (empty($_POST['invoice_id']) || empty($_POST['status'])) {
             http_response_code(400);
             echo json_encode(['error' => 'invoice_id and status are required']);
@@ -60,8 +68,8 @@ class InvoiceController {
         $success = $this->InvoiceModel->updateInvoiceStatus($_POST['invoice_id'], $_POST['status']);
 
         if ($success) {
-            http_response_code(200);
-            echo json_encode(['message' => 'Invoice updated']);
+            header("Location: /src/view/layout/invoice.php");
+            exit;
         } else {
             http_response_code(500);
             echo json_encode(['error' => 'Failed to update invoice']);
@@ -69,7 +77,6 @@ class InvoiceController {
     }
 
     public function deleteInvoice() {
-        $_POST = json_decode(file_get_contents('php://input'), true);
         if (empty($_POST['invoice_id'])) {
             http_response_code(400);
             echo json_encode(['error' => 'invoice_id is required']);
@@ -79,8 +86,8 @@ class InvoiceController {
         $success = $this->InvoiceModel->deleteInvoice($_POST['invoice_id']);
 
         if ($success) {
-            http_response_code(200);
-            echo json_encode(['message' => 'Invoice deleted']);
+            header("Location: /src/view/layout/invoice.php");
+            exit;
         } else {
             http_response_code(500);
             echo json_encode(['error' => 'Failed to delete invoice']);
