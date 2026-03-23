@@ -23,23 +23,18 @@ class DonationController {
     }
 
     public function addDonation(){
-        
-        $_POST= json_decode(file_get_contents('php://input'), true);
-        if (empty($_POST['user_id']) || empty($_POST['donation_amount'])|| empty($_POST['donation_id'])) {
-            http_response_code(400);
-            echo json_encode(['error' => 'donation_id, user_id, or donation_amount is missing']);
-            return;
-        }
+        session_start();
+        $date = new DateTime();
+        $date = $date->format('Y-m-d');
         $success= $this->DonationModel->addDonation(
-            $_POST['user_id'], 
-            $_POST['donation_amount'], 
-            $_POST['donation_id']);
+            $_POST['amount'], 
+            $date,
+            $_POST['id'],
+            $_SESSION['user_id']); 
+
         if ($success) {
-            http_response_code(201);
-            echo json_encode(['message' => 'Donation added successfully']);
+            echo "Success";
         } else {
-            http_response_code(500);
-            echo json_encode(['error' => 'Failed to add donation']);
         }
     }
 

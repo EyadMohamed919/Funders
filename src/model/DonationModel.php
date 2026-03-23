@@ -53,10 +53,11 @@ class DonationModel{
         return $stmt->execute();
     }
 
-    public function AddDonation($donation_amount, $donation_date, $user_id) {
-        $stmt = getDatabaseConnection()->prepare("INSERT INTO donation (donation_amount, donation_date, user_id) VALUES (?, ?, ?)");
-        $stmt->bind_param("ssi", $donation_amount, $donation_date, $user_id);
+    public function AddDonation($donation_amount, $donation_date, $postID, $user_id) {
+        $stmt = getDatabaseConnection()->prepare("INSERT INTO donation (donation_amount, donation_date, post_id, user_id) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssii", $donation_amount, $donation_date, $postID, $user_id);
         return $stmt->execute();
+        
     }
 
 

@@ -5,6 +5,7 @@ class InvoiceModel{
     private $invoiceNumber;
     private $amount;
     private $date;
+    private $userID;
 
     public function __construct($userID, $amount, $date)
     {
@@ -19,6 +20,28 @@ class InvoiceModel{
         $this->amount = $amount;
         $this->date = $date;
         $this->invoiceNumber = $conn->insert_id;
+    }
+
+    public function setInvoice($userID, $invoiceNumber, $amount, $date)
+    {
+        $this->invoiceNumber = $invoiceNumber; 
+        $this->userID = $userID;
+        $this->amount = $amount;
+        $this->date = $date;
+    }
+
+    public function getInvoice($id)
+    {
+        $stmt = getDatabaseConnection()->prepare("SELECT * FROM invoice WHERE invoice_id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result->num_rows > 0)
+        {
+            $row = $result->fetch_assoc();
+            $this->setInvoice($row["user_id"], $id, $row["invoice_amount"], $row["invoice_date"]);
+            return $this
+        }
     }
 
     public function getInvoiceNumber(){return $this->invoiceNumber;}

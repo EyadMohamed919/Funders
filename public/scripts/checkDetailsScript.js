@@ -14,5 +14,5 @@ function checkDetails(data)
     target.innerHTML = Math.round((data[3] / data[4]) * 100) + '% reached <br><i class="fa-solid fa-caret-down"></i>';
     target.style.left = Math.round((data[3] / data[4]) * 100) + "%";
     bar.style.width = (data[3] / data[4]) * 100 + "%";
-    link.href = "../../router/DonationRouter.php?id=" + data[0];
+    link.href = "Donation.php?id=" + data[0];
 }
