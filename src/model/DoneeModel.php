@@ -1,7 +1,7 @@
 <?php
 require 'UserModel.php';
 require 'Bank.php';
-require_once __DIR__ . '/../config/db.php'; // Include the database connection
+require_once __DIR__ . '/../config/db.php';
 class DoneeModel extends UserModel
 {
     private string $nationalID;
@@ -15,16 +15,6 @@ class DoneeModel extends UserModel
     {
         parent::__construct();
     }
-
-    // file path to the document 
-    // (may be hashed/encrypted) example "uploads/proof_of_case/12313123242553959695946784964.pdf"
-    // TODO: implement file upload and storage logic in the controller, 
-    // and ensure that the file path is correctly set in this property when a donee registers.
-
-
-    // Getters and Setters
-
-    // National ID
     public function setNationalID(string $nationalID): void
     {
         $this->nationalID = $nationalID;
@@ -120,11 +110,6 @@ class DoneeModel extends UserModel
         }
         return false;
     }
-
-    /* this method retrieves all donees from the database, 
-    creates DoneeModel objects for each record, and returns them as an array. 
-    If no donees are found, it returns false.
-    */
     #[\Override]
     public function getAllUsers(): array|false
     {
@@ -158,25 +143,10 @@ class DoneeModel extends UserModel
     public function updateUser($id, $fname, $lname, $email, $phone, $password): bool
     {
         parent::updateUser($id, $fname, $lname, $email, $phone, $password);
-        /**
-         * since we can't pass bankname directly like this ```$this->bank->getBankName()```
-         * because $this->bank is an instance of BankType enum, 
-         * we need to call the getBankName() method to retrieve 
-         * the string value
-         * This is necessary because the database expects a string value for the bank name,
-         * not an enum instance.
-         * If we were to pass $this->bank directly, it would likely cause an error 
-         */
         $bankname = $this->bank->getBankName();
         $stmt = getDatabaseConnection()->prepare("UPDATE donees SET 
         donee_national_id = ?, donee_bank_name = ?, donee_proof_of_case_document = ?
         WHERE user_id = ?");
-        /*
-         * we bind the parameters for the prepared statemnt using the bind_param method
-         * the first argument is a string that specifies the types of the parameters:
-         * 
-         * 
-         */
         $stmt->bind_param("sssi", $this->nationalID, $bankname, $this->proofOfCaseDocument, $id);
         $stmt->execute();
 
