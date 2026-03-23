@@ -13,11 +13,11 @@ class AdminModel{
         if($result->num_rows > 0)
         {
 
-            echo "User is admin";
+            return 1;
         }
         else
         {
-            echo "User is not admin";
+            return 0;
         }
     }
 

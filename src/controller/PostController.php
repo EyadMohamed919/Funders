@@ -85,6 +85,13 @@ class PostController{
         header("Location: /src/router/PostRouter.php");
         exit();
     }
+
+    public static function changeStatus($state, $postID)
+    {
+        $postModel = new PostModel();
+        $postModel->changeStatus($state, $postID);
+        header("location: ../view/layout/AdminDashboard.php");
+    }
 }
 
 ?>

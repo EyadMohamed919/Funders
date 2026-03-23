@@ -1,5 +1,6 @@
 <?php
 require_once("../model/UserModel.php");
+require_once("../model/AdminModel.php");
 class UserController{
     public static function login()
     {
@@ -7,6 +8,7 @@ class UserController{
         $pass  = $_POST['password'] ?? '';
 
         $userModel = new UserModel();
+        $admin = new AdminModel();
         $userData = $userModel->getUser($email, $pass);
 
         if ($userData) {
@@ -17,8 +19,17 @@ class UserController{
             $_SESSION['user_email'] = $userData->getEmail();
             $_SESSION['user_phone'] = $userData->getPhone();
             $_SESSION['LOGIN_ERROR'] = null;
+
+            if($admin->checkAdmin($userData->getId()) == 1)
+            {
+                header("Location: /src/view/layout/AdminDashboard.php");
+            }
+            else
+            {
+                header("Location: /src/view/layout/Dashboard.php");
+            }
             
-            header("Location: /src/view/layout/Dashboard.php");
+            
             exit();
         } else {
             session_start();
