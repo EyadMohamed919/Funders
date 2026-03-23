@@ -1,11 +1,16 @@
 <?php
-require_once("../model/PostModel.php");
+require_once __DIR__ . "/../model/PostModel.php";
 class PostController{
     //show list page
     public static function index(){
         $postModel = new PostModel();
         $posts = $postModel->getAllPosts();
         include("../view/posts/index.php");
+    }
+
+    public static function getAllPosts(){
+        $postModel = new PostModel();
+        return $postModel->getAllPosts();
     }
     //show single post
     public static function show($id){

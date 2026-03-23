@@ -18,7 +18,7 @@ class UserController{
             $_SESSION['user_phone'] = $userData->getPhone();
             $_SESSION['LOGIN_ERROR'] = null;
             
-            header("Location: /dashboard");
+            header("Location: /src/view/layout/Dashboard.php");
             exit();
         } else {
             session_start();
