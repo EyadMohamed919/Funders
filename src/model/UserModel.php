@@ -94,4 +94,33 @@ class UserModel {
         
         return $stmt->affected_rows > 0;
     }
+
+    public function createUser($id, $fname, $lname, $email, $password, $phone)
+    {
+        $conn = getDatabaseConnection();
+        $stmt = $conn->prepare("INSERT INTO user(user_id, user_fname, user_lname
+        user_email, user_phone, user_password)
+        VALUES(?, ?, ?, ?, ?, ?)");
+        $this->setUser($id, $fname, $lname, $email, $password, $phone);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bind_param("isssis", 
+            $this->getId(),
+            $this->fname,
+            $this->lname,
+            $this->email,
+            $this->phone,
+            $hashedPassword
+        );
+        $stmt->execute();
+
+        if($stmt->affected_rows > 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
 }
