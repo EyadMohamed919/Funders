@@ -1,7 +1,41 @@
 <?php
 
 require_once("../model/UserModel.php");
+require_once("../../config/db.php");
 class DonorModel extends UserModel{
     
+    private $donorID;
+    private $isLaundering;
+    private $totalDonatedAmount;
+    private $isAnonymous;
+    
+    public function createDonorAccount($userID)
+    {
+        $this->isLaundering = false;
+        $this->isAnonymous = false;
+
+        $conn = getDatabaseConnection();
+        $stmt = $conn->prepare("INSERT INTO donor(donor_laundering, donor_anonymous, user_id)
+        VALUES(?, ?, ?)");
+        $stmt->bind_param("iii", $this->isLaundering, $this->isAnonymous);
+        $stmt->execute();
+        
+        if($stmt->affected_rows > 0)
+        {
+            $this->donorID = $conn->insert_id;
+            return 1;    
+        }
+        else
+        {
+            return 0; 
+        }
+    }
+
+    public function toggleAnonymity()
+    {
+
+
+    }
+
 }
 ?>
