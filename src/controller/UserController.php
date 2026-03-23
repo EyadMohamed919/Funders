@@ -1,13 +1,14 @@
 <?php
 require_once("../model/UserModel.php");
-class UserController
-{
+require_once("../model/AdminModel.php");
+class UserController{
     public static function login()
     {
         $email = $_POST['email'] ?? '';
         $pass = $_POST['password'] ?? '';
 
         $userModel = new UserModel();
+        $admin = new AdminModel();
         $userData = $userModel->getUser($email, $pass);
 
         if ($userData) {
@@ -19,7 +20,16 @@ class UserController
             $_SESSION['user_phone'] = $userData->getPhone();
             $_SESSION['LOGIN_ERROR'] = null;
 
-            header("Location: /dashboard");
+            if($admin->checkAdmin($userData->getId()) == 1)
+            {
+                header("Location: /src/view/layout/AdminDashboard.php");
+            }
+            else
+            {
+                header("Location: /src/view/layout/Dashboard.php");
+            }
+            
+            
             exit();
         } else {
             session_start();

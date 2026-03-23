@@ -1,5 +1,6 @@
 <?php
-require_once("../../config/db.php");
+
+require_once __DIR__ . "/../../config/db.php";
 class PostModel {
     private $id;
     private $title;
@@ -122,6 +123,23 @@ class PostModel {
             );
         }
         return !empty($posts) ? $posts : false;
+    }
+
+    public function changeStatus($state, $postID)
+    {
+        $stmt = getDatabaseConnection()->prepare("UPDATE post SET post_status = ? WHERE post_id = ?");
+        $stmt->bind_param("si", $state, $postID);
+        $stmt->execute();
+        
+        if($stmt->affected_rows > 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 }
 

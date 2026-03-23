@@ -1,11 +1,16 @@
 <?php
-require_once("../model/PostModel.php");
+require_once __DIR__ . "/../model/PostModel.php";
 class PostController{
     //show list page
     public static function index(){
         $postModel = new PostModel();
         $posts = $postModel->getAllPosts();
         include("../view/posts/index.php");
+    }
+
+    public static function getAllPosts(){
+        $postModel = new PostModel();
+        return $postModel->getAllPosts();
     }
     //show single post
     public static function show($id){
@@ -79,6 +84,13 @@ class PostController{
         $postModel->deletePost();
         header("Location: /src/router/PostRouter.php");
         exit();
+    }
+
+    public static function changeStatus($state, $postID)
+    {
+        $postModel = new PostModel();
+        $postModel->changeStatus($state, $postID);
+        header("location: ../view/layout/AdminDashboard.php");
     }
 }
 
