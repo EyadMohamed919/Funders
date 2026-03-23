@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json");
-require_once("../../controllers/DonationController.php");
+require_once __DIR__ . "/../controller/DonationController.php";
+
 $controller = new DonationController();
 $method = $_SERVER['REQUEST_METHOD'];
 

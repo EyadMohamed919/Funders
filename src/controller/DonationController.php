@@ -1,5 +1,5 @@
 <?php
-require_once("../model/DonationModel.php");
+require_once __DIR__ . "/../model/DonationModel.php";
 class DonationController {
     private $DonationModel;
 
