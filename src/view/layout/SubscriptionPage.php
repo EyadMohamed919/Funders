@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 <html lang="en">
 <head>
+    <a  href="Dashboard.php">Return to Dashboard</a>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../../public/css/subscriptionStyle.css">
@@ -16,7 +17,7 @@ if (!isset($_SESSION['user_id'])) {
     <title>Subscription</title>
 </head>
 <body>
-    
+     
     <form action="../../router/SubscriptionRouter.php" method="post">
         <h1>Subscription</h1>
         <p>Subscribe to a recurring amount to be payed randomly</p>
@@ -35,7 +36,7 @@ if (!isset($_SESSION['user_id'])) {
             I want to pay this amount every 
             <select name="frequency" id="">
                <option value="monthly">Monthly</option>
-               <option value="wonthly">Weekly</option> 
+               <option value="weekly">Weekly</option> 
             </select>
         </div>
 
@@ -44,5 +45,6 @@ if (!isset($_SESSION['user_id'])) {
     </form>
 
     <script src="../../../public/scripts/subscriptionScript.js"></script>
+   
 </body>
 </html>

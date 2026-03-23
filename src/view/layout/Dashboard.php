@@ -39,6 +39,7 @@ if (!isset($_SESSION['user_id'])) {
                 <div id="bar" class='bar-overlay'></div>
             </div>
             <a id="link" href="#"><i class="fa-solid fa-hand-holding-dollar"></i>Donate</a>
+            
         </div>
     </section>
 
