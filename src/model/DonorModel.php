@@ -31,9 +31,20 @@ class DonorModel extends UserModel{
         }
     }
 
-    public function toggleAnonymity()
+    public function toggleAnonymity($state)
     {
-
+        $stmt = getDatabaseConnection()->prepare("UPDATE donor SET donor_anonymous = ?");
+        $stmt->bind_param("i", $state);
+        $stmt->execute();
+        
+        if($stmt->affected_rows > 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
 
     }
 
