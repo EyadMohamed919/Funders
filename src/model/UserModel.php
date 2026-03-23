@@ -21,6 +21,8 @@ class UserModel {
     public function setPhone($phone) { $this->phone = htmlspecialchars(trim($phone)); }
     public function setPassword($password) { $this->password = password_hash($password, PASSWORD_DEFAULT); }
 
+    public function __construct() {
+}
     public function setUser($id, $fname, $lname, $email, $password, $phone) {
         $this->id    = $id;
         $this->fname    = htmlspecialchars(trim($fname));

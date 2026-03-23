@@ -5,7 +5,7 @@ class UserController{
     public static function login()
     {
         $email = $_POST['email'] ?? '';
-        $pass  = $_POST['password'] ?? '';
+        $pass = $_POST['password'] ?? '';
 
         $userModel = new UserModel();
         $admin = new AdminModel();
