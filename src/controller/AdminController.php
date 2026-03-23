@@ -9,10 +9,25 @@ class AdminController{
         return $admin->getAllAdmin();
     } 
 
-    public static function addAdmin()
+    public static function addAdmin($fname, $lname, $email, $password, $phone)
     {
+
         $user = new UserModel();
-        $user = $user->add
+        $userID = $user->createUser($fname, $lname, $email, $password, $phone);
+        if($userID != 0)
+        {
+            $admin = new AdminModel();
+            $admin->addAdmin($userID);
+            header("location: ../view/layout/AdminManagement.php");
+        }
     }
+
+    public static function deleteAdmin($userID)
+    {
+        $admin = new AdminModel();
+        $admin->deleteAdmin($userID);
+        header("location: ../view/layout/AdminManagement.php");
+        
+    } 
 }
 ?>

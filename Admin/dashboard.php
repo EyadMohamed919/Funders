@@ -2,8 +2,9 @@
 session_start();
 require_once "adminModel.php";
 
-$model = new Model();
-$data = $model->getAll();
+require_once __DIR__ . "/../../controller/AdminController.php";
+require_once __DIR__ . "/../../controller/AdminController.php";
+$admin = new AdminController();
 ?>
 
 <!DOCTYPE html>

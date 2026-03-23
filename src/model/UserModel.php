@@ -1,5 +1,5 @@
 <?php
-require_once("../../config/db.php");
+require_once __DIR__ . "/../../config/db.php";
 
 class UserModel {
     private $id;
@@ -95,16 +95,15 @@ class UserModel {
         return $stmt->affected_rows > 0;
     }
 
-    public function createUser($id, $fname, $lname, $email, $password, $phone)
+    public function createUser($fname, $lname, $email, $password, $phone)
     {
         $conn = getDatabaseConnection();
-        $stmt = $conn->prepare("INSERT INTO user(user_id, user_fname, user_lname
+        $stmt = $conn->prepare("INSERT INTO user(user_fname, user_lname,
         user_email, user_phone, user_password)
-        VALUES(?, ?, ?, ?, ?, ?)");
-        $this->setUser($id, $fname, $lname, $email, $password, $phone);
+        VALUES(?, ?, ?, ?, ?)");
+        $this->setUser(0,$fname, $lname, $email, $password, $phone);
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bind_param("isssis", 
-            $this->getId(),
+        $stmt->bind_param("sssis", 
             $this->fname,
             $this->lname,
             $this->email,
@@ -115,7 +114,7 @@ class UserModel {
 
         if($stmt->affected_rows > 0)
         {
-            return 1;
+            return $conn->insert_id;
         }
         else
         {

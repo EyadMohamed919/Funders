@@ -66,7 +66,7 @@ class AdminModel{
     }
 }
 
-$admin = new AdminModel();
-echo $admin->deleteAdmin(2);
-// var_dump($admin->getAllAdmin());
+// $admin = new AdminModel();
+// echo $admin->deleteAdmin(2);
+// // var_dump($admin->getAllAdmin());
 ?>
