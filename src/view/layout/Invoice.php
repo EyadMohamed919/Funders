@@ -1,5 +1,8 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['user_id'])) {
     header("location: /src/view/layout/Login.php");
     exit();
@@ -9,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice #<?php echo $invoice->getInvoiceNumber(); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -30,6 +34,12 @@ if (!isset($_SESSION['user_id'])) {
 
         <div class="details-grid">
             <div class="detail-item">
+                <label>Full Name</label>
+                <span><?php echo $user->getFname() . " " . $user->getLname(); ?></span>
+            </div>
+        </div>
+        <div class="details-grid">
+            <div class="detail-item">
                 <label>Issue Date</label>
                 <span><?php echo $invoice->getDate(); ?></span>
             </div>
@@ -41,13 +51,16 @@ if (!isset($_SESSION['user_id'])) {
 
         <div class="amount-section">
             <div class="total-label">Total Donation Amount</div>
-            <div class="total-value">$<?php echo number_format($invoice->getAmount(), 2); ?></div>
+            <div class="total-value">ج.م<?php echo number_format($invoice->getAmount(), 2); ?></div>
         </div>
 
         <div class="footer-note">
-            <p>Thank you for your generous contribution. This receipt confirms your donation to the selected cause.</p>
+            <button onclick="generatePDF(<?php echo $invoice->getInvoiceNumber(); ?>)" class="download-btn">
+                <i class="fa-solid fa-file-pdf"></i> Download as PDF
+            </button>
         </div>
     </div>
 
+    <script src="../../../public/scripts/generatePDF.js"></script>
 </body>
 </html>

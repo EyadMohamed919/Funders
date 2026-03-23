@@ -59,6 +59,28 @@ class UserModel {
         return false;
     }
 
+    public function getUserByID($userID) {
+        $stmt = getDatabaseConnection()->prepare("SELECT * FROM user WHERE user_id = ?");
+        $stmt->bind_param("i", $userID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $row = $result->fetch_assoc();
+            
+            $this->setUser(
+                $row["user_id"],
+                $row["user_fname"], 
+                $row["user_lname"], 
+                $row["user_email"], 
+                $row["user_password"], 
+                $row["user_phone"]
+            );
+           
+        
+
+        return $this;
+    }
+
     public function getAllUsers() {
         $userArray = array();
         $stmt = getDatabaseConnection()->prepare("SELECT * FROM user");

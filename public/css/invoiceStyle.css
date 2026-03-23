@@ -99,4 +99,16 @@ body {
 @media print {
     body { background: white; padding: 0; }
     .invoice-card { box-shadow: none; border: none; }
+    .download-btn {
+        display: none;
+    }
+}
+
+button{
+    padding: 10px;
+    background-color: #007b25;
+    color: white;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
 }
