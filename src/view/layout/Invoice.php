@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice #<?php echo $invoiceNumber; ?></title>
+    <title>Invoice #<?php echo $invoice->getInvoiceNumber(); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/invoiceStyle.css">
 </head>
@@ -17,14 +17,14 @@
             </div>
             <div class="invoice-meta">
                 <h1>INVOICE</h1>
-                <p style="color: var(--primary-color); font-weight: 700;">#<?php echo $invoiceNumber; ?></p>
+                <p style="color: var(--primary-color); font-weight: 700;">#<?php echo $invoice->getInvoiceNumber(); ?></p>
             </div>
         </div>
 
         <div class="details-grid">
             <div class="detail-item">
                 <label>Issue Date</label>
-                <span><?php echo $date; ?></span>
+                <span><?php echo $invoice->getDate(); ?></span>
             </div>
             <div class="detail-item" style="text-align: right;">
                 <label>Payment Method</label>
@@ -34,12 +34,11 @@
 
         <div class="amount-section">
             <div class="total-label">Total Donation Amount</div>
-            <div class="total-value">$<?php echo number_format($amount, 2); ?></div>
+            <div class="total-value">$<?php echo number_format($invoice->getAmount(), 2); ?></div>
         </div>
 
         <div class="footer-note">
             <p>Thank you for your generous contribution. This receipt confirms your donation to the selected cause.</p>
-            <p><strong>Funders Platform &copy; 2026</strong></p>
         </div>
     </div>
 

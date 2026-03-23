@@ -26,15 +26,16 @@ class DonationController {
         session_start();
         $date = new DateTime();
         $date = $date->format('Y-m-d');
-        $success= $this->DonationModel->addDonation(
+        $donationID= $this->DonationModel->addDonation(
             $_POST['amount'], 
             $date,
             $_POST['id'],
             $_SESSION['user_id']); 
 
-        if ($success) {
-            echo "Success";
+        if ($donationID != 0) {
+            header("location: ../view/donation/success.php?id=" . $donationID);
         } else {
+            echo "Failed to donate";
         }
     }
 

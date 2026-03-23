@@ -9,16 +9,13 @@ class InvoiceModel{
 
     public function __construct($userID, $amount, $date)
     {
-        $date = new DateTime();
-        $date->format('Y-m-d');
         $this->date = $date;
         $conn = getDatabaseConnection();
-        $stmt = $conn->prepare("INSERT INTO invoice(invoice_amount, invoice_date, invoice_date) 
+        $stmt = $conn->prepare("INSERT INTO invoice(user_id, invoice_amount, invoice_date) 
         VALUES (?, ?, ?)");
-        $stmt->bind_param("isi", $amount, $date);
+        $stmt->bind_param("iis", $userID, $amount, $this->date);
         $stmt->execute();
         $this->amount = $amount;
-        $this->date = $date;
         $this->invoiceNumber = $conn->insert_id;
     }
 
@@ -40,7 +37,7 @@ class InvoiceModel{
         {
             $row = $result->fetch_assoc();
             $this->setInvoice($row["user_id"], $id, $row["invoice_amount"], $row["invoice_date"]);
-            return $this
+            return $this;
         }
     }
 

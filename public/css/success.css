@@ -1,0 +1,40 @@
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    font-family: "Josefin Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+i{
+    font-size: 200px;
+    color: rgb(0, 118, 164);
+    position: absolute;
+    top: 20%;
+    animation-name: scaling;
+    animation-duration: 1.2s;
+    text-shadow: 0px 0px 0px rgb(0, 118, 164);
+    animation-iteration-count: infinite;
+}
+
+@keyframes scaling {
+    50%{font-size: 220px;
+        text-shadow: 0px 10px 0px rgb(0, 53, 74);}
+    100%{font-size: 200px;
+        text-shadow: 0px 0px 0px rgb(0, 118, 164);}
+}
+
+h1{
+    margin: auto;
+    margin-top: 25%;
+    margin-bottom: 50px;
+}
+
+a{
+    margin: auto;
+}
+
