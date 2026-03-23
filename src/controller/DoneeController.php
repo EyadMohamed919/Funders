@@ -31,21 +31,22 @@ class DoneeController extends UserController
         }
     }
     
-    private static function uploadProofOfCase(): string
-    {
-        $file = $_FILES['proof_of_case_document'];
+// TODO: not implemented updateDonee() method for the Donee
+    // private static function uploadProofOfCase(): string
+    // {
+    //     $file = $_FILES['proof_of_case_document'];
 
-        if ($file['error'] !== UPLOAD_ERR_OK) {
-            throw new Exception("File upload failed.");
-        }
+    //     if ($file['error'] !== UPLOAD_ERR_OK) {
+    //         throw new Exception("File upload failed.");
+    //     }
 
-        $filename = hash('sha256', time() . $_SESSION['user_fname']) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
-        $path = "uploads/{$_SESSION['user_id']}/proofofcase/{$filename}";
-        $absolutePath = __DIR__ . "/../../{$path}";
+    //     $filename = hash('sha256', time() . $_SESSION['user_fname']) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+    //     $path = "uploads/{$_SESSION['user_id']}/proofofcase/{$filename}";
+    //     $absolutePath = __DIR__ . "/../../{$path}";
 
-        mkdir(dirname($absolutePath), 0700, true);
-        move_uploaded_file($file['tmp_name'], $absolutePath);
+    //     mkdir(dirname($absolutePath), 0700, true);
+    //     move_uploaded_file($file['tmp_name'], $absolutePath);
 
-        return $path;
-    }
+    //     return $path;
+ //   }
 }

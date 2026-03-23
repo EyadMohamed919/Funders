@@ -7,6 +7,9 @@ class DoneeModel extends UserModel
     private string $nationalID;
     private BankType $bank;
     private string $proofOfCaseDocument;
+    private bool $isVerified;
+
+    private bool $isOrganization;
 
     public function __construct()
     {
@@ -52,7 +55,22 @@ class DoneeModel extends UserModel
     {
         return $this->proofOfCaseDocument;
     }
-
+    public function setIsVerified(bool $isVerified): void
+    {
+        $this->isVerified = $isVerified;
+    }
+    public function getIsVerified(): bool
+    {
+        return $this->isVerified;
+    }
+    public function setIsOrganization(bool $isOrganization): void
+    {
+        $this->isOrganization = $isOrganization;
+    }
+    public function getIsOrganization(): bool
+    {
+        return $this->isOrganization;
+    }
     public function setDonee(
         $id,
         $fname,
