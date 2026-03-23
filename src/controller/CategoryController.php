@@ -1,11 +1,11 @@
 <?php
-require_once("../model/CategoryModel.php");
+require_once __DIR__ . "/../model/CategoryModel.php";
 class CategoryController{
     //show list page
     public static function index(){
         $categoryModel = new CategoryModel();
         $categories = $categoryModel->getAllCategories();
-        include("../view/categories/index.php");
+        include __DIR__ . "/../view/categories/index.php";
     }
 
     //show single category
@@ -18,7 +18,7 @@ class CategoryController{
         }
         else
         {
-            include("../view/category/show.php");
+            include __DIR__ . "/../view/category/show.php";
         }
     }
     //show create form

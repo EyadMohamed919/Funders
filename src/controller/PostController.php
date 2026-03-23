@@ -5,7 +5,7 @@ class PostController{
     public static function index(){
         $postModel = new PostModel();
         $posts = $postModel->getAllPosts();
-        include("../view/posts/index.php");
+        include __DIR__ . "/../view/posts/index.php";
     }
 
     public static function getAllPosts(){
@@ -21,7 +21,7 @@ class PostController{
             return;
         }
         else        {
-            include("../view/post/show.php");
+            include __DIR__ . "/../view/post/show.php";
         }
     }
     //show create form

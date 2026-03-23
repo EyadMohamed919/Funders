@@ -16,7 +16,7 @@
 
     <section>
         <div class="post-container">
-        <?php include "../posts/postsFeed.php"; ?>
+        <?php include __DIR__ . "/../posts/postsFeed.php"; ?>
         </div>
 
         <div class="post-details">

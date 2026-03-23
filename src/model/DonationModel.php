@@ -1,5 +1,5 @@
 <?php
-require_once("../../config/db.php");
+require_once __DIR__ . "/../../config/db.php";
 class DonationModel{
     public $donation_id;
     public $donation_amount;

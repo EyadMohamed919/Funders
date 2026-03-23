@@ -1,5 +1,5 @@
 <?php
-require_once("../controller/UserController.php");
+require_once __DIR__ . "/../controller/UserController.php";
 if(isset($_POST) && isset($_POST["router"]))    
 {
     if($_POST["router"] == "login")

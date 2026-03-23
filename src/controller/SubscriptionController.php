@@ -1,5 +1,5 @@
 <?php 
-require_once("../model/SubscriptionModel.php");
+require_once __DIR__ . "/../model/SubscriptionModel.php";
 
 class SubscriptionController{
     public static function subscribe($amount, $frequency, $userID)

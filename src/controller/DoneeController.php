@@ -1,6 +1,6 @@
 <?php
-require_once("../model/DoneeModel.php");
-require_once("../model/UserModel.php");
+require_once __DIR__ . "/../model/DoneeModel.php";
+require_once __DIR__ . "/../model/UserModel.php";
 class DoneeController extends UserController
 {
 

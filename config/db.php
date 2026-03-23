@@ -6,23 +6,43 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
-$host = $_ENV['DB_HOST'];
-$port = $_ENV['DB_PORT'];
-$db   = $_ENV['DB_NAME'];
-$user = $_ENV['DB_USER'];
-$pass = $_ENV['DB_PASS'];
+$host = $_ENV['DB_HOST'] ?? 'localhost';
+$port = (int) ($_ENV['DB_PORT'] ?? 3306);
+$db = $_ENV['DB_NAME'] ?? '';
+$user = $_ENV['DB_USER'] ?? '';
+$pass = $_ENV['DB_PASS'] ?? '';
+$sslCa = $_ENV['DB_SSL_CA'] ?? '';
+$sslCert = $_ENV['DB_SSL_CERT'] ?? '';
+$sslKey = $_ENV['DB_SSL_KEY'] ?? '';
 
-$conn = new mysqli($host, $user, $pass, $db, $port);
+$conn = mysqli_init();
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($conn === false) {
+    die('Failed to initialize MySQL connection.');
 }
-else
-{
-    //Remove el comment law 3ayez to debug bas
-    //echo "Connected to MySQL Database";
-    // echo "Connected to MySQL Database";
+
+$conn->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
+
+$useSsl = $sslCa !== '' || $sslCert !== '' || $sslKey !== '';
+
+if ($useSsl) {
+    $conn->ssl_set(
+        $sslKey !== '' ? $sslKey : null,
+        $sslCert !== '' ? $sslCert : null,
+        $sslCa !== '' ? $sslCa : null,
+        null,
+        null
+    );
 }
+
+$flags = $useSsl ? MYSQLI_CLIENT_SSL : 0;
+$connected = $conn->real_connect($host, $user, $pass, $db, $port, null, $flags);
+
+if (!$connected) {
+    die('Connection failed to ' . $host . ':' . $port . '/' . $db . ' - ' . mysqli_connect_error());
+}
+
+$conn->set_charset('utf8mb4');
 
 function getDatabaseConnection()
 {

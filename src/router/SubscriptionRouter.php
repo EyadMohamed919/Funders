@@ -1,5 +1,5 @@
 <?php
-require_once("../controller/SubscriptionController.php");
+require_once __DIR__ . "/../controller/SubscriptionController.php";
 if(isset($_POST))
 {
     session_start();
