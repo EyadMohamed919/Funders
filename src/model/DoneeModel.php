@@ -182,4 +182,33 @@ class DoneeModel extends UserModel
 
         return $stmt->affected_rows >= 0;
     }
+
+   public function register(): bool
+{
+    
+    $fname    = $this->getFname();
+    $lname    = $this->getLname();
+    $email    = $this->getEmail();
+    $password = $this->getPassword();
+    $phone    = $this->getPhone();
+
+    
+    $stmt = getDatabaseConnection()->prepare("
+        INSERT INTO user (user_fname, user_lname, user_email, user_password, user_phone)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+    $stmt->bind_param("sssss", $fname, $lname, $email, $password, $phone);
+    $stmt->execute();
+    $userId = $stmt->insert_id;
+
+    $bankName = $this->bank->getBankName();
+    $stmt = getDatabaseConnection()->prepare("
+        INSERT INTO donees (user_id, donee_national_id, donee_bank_name, donee_proof_of_case_document)
+        VALUES (?, ?, ?, ?)
+    ");
+    $stmt->bind_param("isss", $userId, $this->nationalID, $bankName, $this->proofOfCaseDocument);
+    $stmt->execute();
+
+    return $stmt->affected_rows > 0;
+}
 }

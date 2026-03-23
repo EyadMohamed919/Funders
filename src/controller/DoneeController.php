@@ -30,7 +30,28 @@ class DoneeController extends UserController
             header("location:../view/layout/login.php");
         }
     }
-    
+
+
+    public static function register()
+{
+    session_start();
+    $donee = new DoneeModel();
+    $donee->setDonee(
+        null, // no id yet, DB generates it
+        $_POST['fname'],
+        $_POST['lname'],
+        $_POST['email'],
+        $_POST['password'],
+        $_POST['phone'],
+        $_POST['donee_national_id'],
+        BankType::from($_POST['donee_bank_name']),
+        // self::uploadProofOfCase()
+    );
+   $donee->register();
+    header("Location: /login");
+    exit();
+}
+
 // TODO: not implemented updateDonee() method for the Donee
     // private static function uploadProofOfCase(): string
     // {
