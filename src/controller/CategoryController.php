@@ -28,7 +28,7 @@ class CategoryController{
         }
         else
         {
-            include("../view/category/show.php");
+            include("../view/category/.php");
         }
     }
     //create form
