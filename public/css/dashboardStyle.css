@@ -10,6 +10,7 @@ body {
 }
 
 nav{
+    position: relative;;
     height: 10%;
     background-color: #007826;
     width: 95%;
@@ -23,6 +24,28 @@ nav{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.nav-links{
+    position: absolute;
+    right: 15%;
+    top: 70%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+    height: 60px;
+    font-size: 1rem;
+    text-decoration: none;
+    color: white;
+    font-weight: 400;
+
+}
+
+.nav-links a{
+    padding: 10px;
+    background-color: white;
+    color: #007826;
+    border-radius: 20px;
+    text-decoration: none;
 }
 
 section{
