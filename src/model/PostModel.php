@@ -194,7 +194,7 @@ class PostModel {
         }
         else
         {
-            return 0;
+            return intval(0);
         }
     }
 }
