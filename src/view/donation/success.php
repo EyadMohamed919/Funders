@@ -14,8 +14,10 @@
 <body>
     <i class="fa-solid fa-circle-check"></i>
     <h1>Donated successfully</h1>
-    <a href="../../controller/InvoiceController.php?id=<?php echo $_GET["id"]; ?>">Generate Invoice</a>
-    <a href="../layout/Dashboard.php">Return to Dashboard</a>
+    <div>
+        <a href="../../controller/InvoiceController.php?id=<?php echo $_GET["id"]; ?>">Generate Invoice</a>
+        <a href="../layout/Dashboard.php">Return to Dashboard</a>
+    </div>
     
 </body>
 </html>
