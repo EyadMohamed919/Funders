@@ -5,6 +5,7 @@ const amount = document.getElementById("amount");
 const target = document.getElementById("target");
 const bar = document.getElementById("bar");
 const link = document.getElementById("link");
+const category = document.getElementById("category");
 function checkDetails(data)
 {
     console.log(data);
@@ -15,4 +16,5 @@ function checkDetails(data)
     target.style.left = Math.round((data[3] / data[4]) * 100) + "%";
     bar.style.width = (data[3] / data[4]) * 100 + "%";
     link.href = "Donation.php?id=" + data[0];
+    category.innerHTML = data[6];
 }

@@ -1,5 +1,5 @@
 <?php
-require_once("../model/CategoryModel.php");
+require_once __DIR__ . "/../model/CategoryModel.php";
 class CategoryController{
     //show list page
     public static function index(){
@@ -8,10 +8,17 @@ class CategoryController{
         include("../view/categories/index.php");
     }
 
+    public static function getCategory($id) 
+    {
+        $categoryModel = new CategoryModel();
+        $category = $categoryModel->getCategory($id);
+        return $category;
+    }
+
     //show single category
     public static function show($id){
         $categoryModel = new CategoryModel();
-        $category = $categoryModel->getCategoryById($id);
+        $category = $categoryModel->getCategory($id);
         if (!$category) {
             echo "Category not found.";
             return;

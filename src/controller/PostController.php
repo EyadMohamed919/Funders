@@ -38,9 +38,9 @@ class PostController{
         $postModel->setDescription($content);
         $postModel->setTargetAmount(0);
         $postModel->setCurrentAmount(0);
-        $postModel->setStatus('draft');
+        $postModel->setStatus('pending');
         $postModel->setImagePath('');
-        $postModel->setCategoryId(0);
+        $postModel->setCategoryId(4);
 
         $postModel->createPost();
         header("Location: /src/router/PostRouter.php");

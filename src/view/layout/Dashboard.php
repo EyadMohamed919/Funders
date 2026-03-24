@@ -32,6 +32,7 @@ if (!isset($_SESSION['user_id'])) {
             <div class="post-details-image"></div>
             <h1 id="title">Title</h1>
             <p id="description">Description</p>
+            <p id="category">Medical</p>
 
             <p id="amount"><strong>3400EGP / 8600EGP</strong></p>
             <div class='bar'>

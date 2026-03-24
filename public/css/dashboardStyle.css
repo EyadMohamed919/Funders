@@ -123,6 +123,13 @@ section{
     transition: 0.2s;
 }
 
+#category{
+    padding: 10px;
+    background-color: #007826;
+    color: white;
+    border-radius: 30px;
+}
+
 .bar-overlay{
     position: absolute;
     left: 0;

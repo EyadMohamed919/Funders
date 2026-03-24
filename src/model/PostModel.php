@@ -24,6 +24,7 @@ class PostModel {
     public function setTitle($title) { $this->title = htmlspecialchars(trim((string)($title ?? ''))); }
     public function setDescription($description) { $this->description = htmlspecialchars(trim((string)($description ?? ''))); }
     public function setTargetAmount($target_amount) { $this->target_amount = floatval($target_amount ?? 0); }
+    
     public function setCurrentAmount($current_amount) { $this->current_amount = floatval($current_amount ?? 0); }
     public function setStatus($status) { $this->status = htmlspecialchars(trim((string)($status ?? ''))); }
     public function setImagePath($image_path) { $this->image_path = htmlspecialchars(trim((string)($image_path ?? ''))); }
@@ -140,6 +141,27 @@ class PostModel {
             return 0;
         }
 
+    }
+
+    public function getCalculateAmount($postID)
+    {
+        $conn = getDatabaseConnection();
+        $stmt = $conn->prepare("SELECT SUM(donation_amount) AS donation_amount 
+        FROM donation WHERE post_id = ?;"); 
+        $stmt->bind_param("i", $postID);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        if($result->num_rows > 0)
+        {
+            $amount = $result->fetch_assoc()["donation_amount"];
+            $this->current_amount = $amount;
+            return $amount;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }
 
