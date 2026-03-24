@@ -5,16 +5,24 @@ class CategoryModel {
     private $id;
     private $name;
 
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
+    public function getId() { 
+        return $this->id; 
+        }
 
-    public function setName($name) { $this->name = htmlspecialchars(trim($name)); }
+    public function getName() { 
+        return $this->name; 
+        }
+
+    public function setName($name) { 
+        $this->name = htmlspecialchars(trim($name)); 
+        }
 
     public function setCategory($id, $name) {
         $this->id   = $id;
         $this->name = htmlspecialchars(trim($name));
         return $this;
     }
+    
     public function getCategory($id) {
         $stmt = getDatabaseConnection()->prepare("SELECT * FROM category WHERE category_id = ?");
         $stmt->bind_param("i", $id);

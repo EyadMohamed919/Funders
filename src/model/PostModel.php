@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../../config/db.php";
+
 class PostModel {
     private $id;
     private $title;
@@ -11,26 +12,59 @@ class PostModel {
     private $image_path;
     private $category_id;
 
-    public function getId() { return $this->id; }
-    public function getTitle() { return $this->title; }
-    public function getDescription() { return $this->description; }
-    public function getTargetAmount() { return $this->target_amount; }
-    public function getCurrentAmount() { return $this->current_amount; }
-    public function getStatus() { return $this->status; }
-    public function getImagePath() { return $this->image_path; }
-    public function getCategoryId() { return $this->category_id; }
+    public function getId() { 
+        return $this->id; 
+        }
+    public function getTitle() { 
+        return $this->title; 
+        }
+    public function getDescription() { 
+        return $this->description; 
+        }
+    public function getTargetAmount() { 
+        return $this->target_amount; 
+        }
+    public function getCurrentAmount() { 
+        return $this->current_amount; 
+        }
+    public function getStatus() { 
+        return $this->status; 
+        }
+    public function getImagePath() { 
+        return $this->image_path; 
+        }
+    public function getCategoryId() { 
+        return $this->category_id; 
+        }
 
-    public function setId($id) { $this->id = intval($id); }
-    public function setTitle($title) { $this->title = htmlspecialchars(trim((string)($title ?? ''))); }
-    public function setDescription($description) { $this->description = htmlspecialchars(trim((string)($description ?? ''))); }
-    public function setTargetAmount($target_amount) { $this->target_amount = floatval($target_amount ?? 0); }
+    public function setId($id) { 
+        $this->id = intval($id); 
+        }
+    public function setTitle($title) { 
+        $this->title = htmlspecialchars(trim((string)($title ?? ''))); 
+        }
+    public function setDescription($description) { 
+        $this->description = htmlspecialchars(trim((string)($description ?? ''))); 
+        }
+    public function setTargetAmount($target_amount) { 
+        $this->target_amount = floatval($target_amount ?? 0); 
+        }
     
-    public function setCurrentAmount($current_amount) { $this->current_amount = floatval($current_amount ?? 0); }
-    public function setStatus($status) { $this->status = htmlspecialchars(trim((string)($status ?? ''))); }
-    public function setImagePath($image_path) { $this->image_path = htmlspecialchars(trim((string)($image_path ?? ''))); }
-    public function setCategoryId($category_id) { $this->category_id = intval($category_id ?? 0); }
+    public function setCurrentAmount($current_amount) { 
+        $this->current_amount = floatval($current_amount ?? 0); 
+        }
+    public function setStatus($status) { 
+        $this->status = htmlspecialchars(trim((string)($status ?? ''))); 
+        }
+    public function setImagePath($image_path) { 
+        $this->image_path = htmlspecialchars(trim((string)($image_path ?? ''))); 
+        }
+    public function setCategoryId($category_id) { 
+        $this->category_id = intval($category_id ?? 0); 
+        }
 
     public function setPost($id, $title, $description, $target_amount, $current_amount, $status, $image_path, $category_id) {
+
         $this->id = intval($id);
         $this->title = htmlspecialchars(trim((string)($title ?? '')));
         $this->description = htmlspecialchars(trim((string)($description ?? '')));

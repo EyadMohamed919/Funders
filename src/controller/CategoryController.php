@@ -1,6 +1,9 @@
 <?php
+
 require_once __DIR__ . "/../model/CategoryModel.php";
+
 class CategoryController{
+
     //show list page
     public static function index(){
         $categoryModel = new CategoryModel();
@@ -28,7 +31,7 @@ class CategoryController{
             include("../view/category/show.php");
         }
     }
-    //show create form
+    //create form
     public static function store(){
         $name = $_POST['category_name'] ?? '';
         $name = trim($name);

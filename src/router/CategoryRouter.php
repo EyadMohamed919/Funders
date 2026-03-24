@@ -11,7 +11,8 @@ switch ($router) {
     case 'createCategory':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             CategoryController::store();
-        } else {
+        } 
+        else {
             header('Location: /src/router/CategoryRouter.php');
             exit;
         }

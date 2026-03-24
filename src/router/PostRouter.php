@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . '/../controller/PostController.php');
 $router = $_REQUEST['router'] ?? 'index';
+
 if(isset($_GET))
 {
     if(isset($_GET["status"]))
