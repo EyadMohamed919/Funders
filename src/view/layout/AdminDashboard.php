@@ -49,7 +49,7 @@ if($checkadmin == 0)
                     <tr>
                         <td><?php echo $row->getId(); ?></td>
                         <td><?php echo $row->getTitle(); ?></td>
-                        <td><?php echo $row->getCurrentAmount(); ?></td>
+                        <td><?php echo $row->getCalculateAmount($row->getId()); ?></td>
                         <td><?php echo $row->getTargetAmount(); ?></td>
                         <td><?php echo $row->getStatus(); ?></td>
                         <td>

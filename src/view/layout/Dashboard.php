@@ -22,6 +22,7 @@ if (!isset($_SESSION['user_id'])) {
     <nav>
         Funders
         <div class="nav-links">
+        <a href="../../view/layout/SubscriptionPage.php"><i class="fa-solid fa-money-bill-1"></i> Subscribe</a>
             <a href="../../router/UserRouter.php?logout=true"><i class="fa-solid fa-arrow-right-to-bracket"></i> Logout</a>
         </div>
     </nav>
