@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 <html lang="en">
 <head>
-    <a  href="Dashboard.php">Return to Dashboard</a>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../../public/css/subscriptionStyle.css">
@@ -42,6 +42,7 @@ if (!isset($_SESSION['user_id'])) {
 
 
         <button type="submit">Subscription</button>
+        <a  href="Dashboard.php">Return to Dashboard</a>
     </form>
 
     <script src="../../../public/scripts/subscriptionScript.js"></script>

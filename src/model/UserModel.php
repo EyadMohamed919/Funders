@@ -40,7 +40,7 @@ class UserModel {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-
+        
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             
@@ -55,6 +55,31 @@ class UserModel {
                     $row["user_phone"]
                 );
             }
+        }
+        return false;
+    }
+
+    
+    public function getUserByEmail($email) {
+        $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+        
+        $stmt = getDatabaseConnection()->prepare("SELECT * FROM user WHERE user_email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            
+            $user = new self();
+            return $user->setUser(
+                $row["user_id"],
+                $row["user_fname"], 
+                $row["user_lname"], 
+                $row["user_email"], 
+                $row["user_password"], 
+                $row["user_phone"]
+            );
         }
         return false;
     }
@@ -119,33 +144,30 @@ class UserModel {
         return $stmt->affected_rows > 0;
     }
 
-    public function createUser($fname, $lname, $email, $password, $phone)
+    public function createUser($fname, $lname, $email, $phone, $password)
     {
         $conn = getDatabaseConnection();
-        $stmt = $conn->prepare("INSERT INTO user(user_fname, user_lname,
-        user_email, user_phone, user_password)
-        VALUES(?, ?, ?, ?, ?)");
-        $this->setUser(0,$fname, $lname, $email, $password, $phone);
+        
+        $stmt = $conn->prepare("INSERT INTO user(user_fname, user_lname, user_email, user_phone, user_password) VALUES(?, ?, ?, ?, ?)");
+        
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bind_param("sssis", 
-            $this->fname,
-            $this->lname,
-            $this->email,
-            $this->phone,
+        
+        $stmt->bind_param("sssss", 
+            $fname, 
+            $lname, 
+            $email, 
+            $phone, 
             $hashedPassword
         );
+        
         $stmt->execute();
 
         if($stmt->affected_rows > 0)
         {
-            $id = $conn->insert_id;
             $this->id = $conn->insert_id;
-            return $conn->insert_id;
+            return $this->id;
         }
-        else
-        {
-            return 0;
-        }
-
+        
+        return 0;
     }
 }

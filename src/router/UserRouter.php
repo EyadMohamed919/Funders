@@ -6,6 +6,10 @@ if(isset($_POST) && isset($_POST["router"]))
     {
         UserController::login($_POST["email"], $_POST["password"]); 
     }
+    else if($_POST["router"] == "register")
+    {
+        UserController::register($_POST["fname"], $_POST["lname"], $_POST["email"], $_POST["phone"],$_POST["password"]);
+    }
 } 
 else if(isset($_GET))
 {
