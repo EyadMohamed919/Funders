@@ -21,6 +21,9 @@ if (!isset($_SESSION['user_id'])) {
 <body>
     <nav>
         Funders
+        <div class="nav-links">
+            <a href="../../router/UserRouter.php?logout=true"><i class="fa-solid fa-arrow-right-to-bracket"></i> Logout</a>
+        </div>
     </nav>
 
     <section>
