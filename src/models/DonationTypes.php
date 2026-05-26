@@ -16,7 +16,7 @@ class DonationTypes{
         {
             while($row = $sql->fetch_assoc())
             {
-                array_push($this->donationTypes, $row["type"]);
+                $this->donationTypes[$row["typeID"]] = $row["typeName"];
             }
 
             return $this->donationTypes;
