@@ -63,7 +63,7 @@ class Payment
             break;
 
         default:
-            $errors[] = "Invalid payment method.";
+            $errors[] = "Invalid payment method";
     }
 
     return $errors;

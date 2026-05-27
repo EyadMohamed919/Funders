@@ -7,6 +7,8 @@ require_once "InstaPayPayment.php";
 require_once "PaymentProcessor.php";
 require_once "PaymentController.php";
 
+$success = false;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $paymentMethod = $_POST['payment_method'];
@@ -16,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $strategy = new VisaPayment();
         $data = [
             'card_number' => $_POST['card_number'] ?? '',
-            'cvv'=> $_POST['cvv']?? ''
+            'cvv'         => $_POST['cvv']         ?? ''
         ];
     } elseif ($paymentMethod == "ewallet") {
         $strategy = new EWalletPayment();
@@ -37,48 +39,87 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $controller = new PaymentController();
     $controller->store();
+
+    $success = true;
 }
 ?>
 
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
-<form method="POST" action="index.php">
+<div class="card">
 
-    <input type="number" name="amount" placeholder="Enter amount" min="1" required>
+<?php if ($success): ?>
 
-    <select name="payment_method" id="payment_method" required>
-        <option value="visa">Visa</option>
-        <option value="ewallet">E-Wallet</option>
-        <option value="instapay">InstaPay</option>
-    </select>
-
-    <div id="visa_fields">
-        <input type="text" name="card_number" placeholder="Card Number (16 digits)">
-        <input type="text" name="cvv" placeholder="CVV">
+    <div class="success-card">
+        <h2>Payment Successful!</h2>
+        <a href="index.php"><button type="button">Back to Home</button></a>
     </div>
 
-    <div id="ewallet_fields" style="display:none;">
-        <input type="text" name="wallet_number" placeholder="Wallet Number">
-    </div>
+<?php else: ?>
 
-    <div id="instapay_fields" style="display:none;">
-        <input type="text" name="instapay_address" placeholder="InstaPay Address">
-    </div>
+    <h2>Make a Payment</h2>
 
-    <button type="submit">Pay</button>
+    <form method="POST" action="index.php">
 
-</form>
+        <label>Amount</label>
+        <input type="text" name="amount" placeholder="Enter amount" min="1" required>
+
+        <label>Payment Method</label>
+        <select name="payment_method" id="payment_method" required>
+            <option value="visa">Visa</option>
+            <option value="ewallet">E-Wallet</option>
+            <option value="instapay">InstaPay</option>
+        </select>
+
+        <hr class="divider">
+
+        <div id="visa">
+            <label>Card Number</label>
+            <input type="text" name="card_number" placeholder="16-digit card number">
+            <label>CVV</label>
+            <input type="text" name="cvv" placeholder="CVV">
+        </div>
+
+        <div id="ewallet" style="display:none;">
+            <label>Wallet Number</label>
+            <input type="text" name="wallet_number" placeholder="Wallet Number">
+        </div>
+
+        <div id="instapay" style="display:none;">
+            <label>InstaPay Address</label>
+            <input type="text" name="instapay_address" placeholder="InstaPay Address">
+        </div>
+
+        <button type="submit">Pay Now</button>
+
+    </form>
+
+<?php endif; ?>
+
+</div>
 
 <script>
     const select = document.getElementById('payment_method');
-    const allFields = ['visa_fields', 'ewallet_fields', 'instapay_fields'];
+    const allFields = ['visa', 'ewallet', 'instapay'];
+
+    // hide all except visa on page load
+    document.getElementById('visa').style.display = 'block';
+    document.getElementById('ewallet').style.display = 'none';
+    document.getElementById('instapay').style.display = 'none';
+
 
     select.addEventListener('change', function () {
         allFields.forEach(id => document.getElementById(id).style.display = 'none');
-        document.getElementById(this.value + '_fields').style.display = 'block';
-    });
+        document.getElementById(this.value).style.display = 'block';
+});
 </script>
 
 </body>

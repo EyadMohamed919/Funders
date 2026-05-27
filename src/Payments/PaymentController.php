@@ -24,27 +24,21 @@ class PaymentController
 
         $payment = new Payment($method, $amount, $attributes);
 
-        $errors = $payment->validate();
-        if ($errors) {
-            die(implode("<br>", $errors));
-        }
+        // $errors = $payment->validate();
+        // if ($errors) {
+        //     die(implode("<br>", $errors));
+        // }
 
         $this->save($payment);
-
-        echo "<h1>Payment saved successfully!</h1>";
-        echo "<a href='index.php'>Back to Home</a>";
     }
 
     private function extractAttributes(string $method): array
     {
         return match ($method) {
             'visa'=> ['card_number' => $_POST['card_number'] ?? '',
-                'cvv'=> $_POST['cvv'] ?? ''
-            ],
-            'ewallet'=> ['wallet_number' => $_POST['wallet_number'] ?? ''
-            ],
-            'instapay' => ['instapay_address' => $_POST['instapay_address'] ?? ''
-            ],
+                'cvv'=> $_POST['cvv'] ?? ''],
+            'ewallet'=> ['wallet_number' => $_POST['wallet_number'] ?? ''],
+            'instapay' => ['instapay_address' => $_POST['instapay_address'] ?? ''],
             default => []
         };
     }
