@@ -15,6 +15,8 @@ class DonationMoneyStrategy extends DonationModel implements IDonationStrategy{
         $postID = $data[0];
         $typeID = $data[1];
         $paymentID = $data[2];
+
+        // Create Donation Ticket
         $donationID = parent::addDonation($postID, $typeID);
 
         

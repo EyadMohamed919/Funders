@@ -1,15 +1,13 @@
 <?php
 
-require_once "Database.php";
-require_once "PaymentModel.php";
+require_once __DIR__ . "/../models/Payment/PaymentModel.php";
 
 class PaymentController
 {
-    private PDO $db;
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        // $this->db = Database::connect();
     }
 
     public function store()
@@ -29,7 +27,7 @@ class PaymentController
             die(implode("<br>", $errors));
         }
 
-        $this->save($payment);
+        $payment->save();
 
         echo "<h1>Payment saved successfully!</h1>";
         echo "<a href='index.php'>Back to Home</a>";
@@ -49,22 +47,5 @@ class PaymentController
         };
     }
 
-    private function save(Payment $payment)
-{
-    $method = $this->db->quote($payment->getPaymentMethod());
-    $amount = $payment->getAmount();
-
-    $this->db->exec(
-        "INSERT INTO payments (payment_method, amount) VALUES ($method, $amount)"
-    );
-
-    $paymentId = $this->db->lastInsertId();
-
-    foreach ($payment->getAttributes() as $key => $value) {
-        $key = $this->db->quote($key);
-        $value = $this->db->quote($value);
-
-        $this->db->exec("INSERT INTO payment_attributes (payment_id, attribute_name, attribute_value) VALUES ($paymentId, $key, $value)");
-    }
-}
+    
 }
