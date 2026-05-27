@@ -1,4 +1,4 @@
 <?php
 interface IDonationStrategy{
-    public function process();
+    public function processDonation($data);
 }
