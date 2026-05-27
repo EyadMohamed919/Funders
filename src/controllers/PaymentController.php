@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../models/Payment/PaymentModel.php";
-
+require_once __DIR__ . "/DonationController.php";
 class PaymentController
 {
 
@@ -27,10 +27,18 @@ class PaymentController
             die(implode("<br>", $errors));
         }
 
-        $payment->save();
+        $paymentID = $payment->save();
 
-        echo "<h1>Payment saved successfully!</h1>";
-        echo "<a href='index.php'>Back to Home</a>";
+        // Delwa2ty el payment is saved to database
+        // Now we have to proceed to save to donation details
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $donationData = $_SESSION["DonationData"];
+        array_push($donationData, $paymentID);
+        $_SESSION["DonationData"] = $donationData;
+        DonationController::createDonation();
     }
 
     private function extractAttributes(string $method): array

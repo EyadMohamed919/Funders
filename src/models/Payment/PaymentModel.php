@@ -43,6 +43,8 @@ class Payment
             $this->db->query("INSERT INTO payment_attributes (payment_id, attribute_name, attribute_value) 
                             VALUES ($paymentId, '$key', '$value')");
         }
+
+        return $paymentId;
     }
 
     public function validate(): array

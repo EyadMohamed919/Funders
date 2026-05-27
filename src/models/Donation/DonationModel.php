@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../config/db.php";
+require_once __DIR__ . "/../../../config/db.php";
 class DonationModel{
     private $donationID;
     private $postID;
@@ -7,8 +7,9 @@ class DonationModel{
     private $status;
     private $type;
     private $detailsID;
+    private $userID;
 
-    protected $conn;
+    private $conn;
 
     public function __construct()
     {
@@ -20,10 +21,11 @@ class DonationModel{
         return $this->conn;
     }
 
-    public function addDonation($postID, $type)
+    public function addDonation($postID, $type, $userID)
     {
-        $sql = $this->conn->query("INSERT INTO donation(postID, status, type) 
-        VALUES (" . $postID .", 1, " . $type . ")");
+        // Status 1 = Pending
+        $sql = $this->conn->query("INSERT INTO donation(postID, status, type, userID) 
+        VALUES ($postID, 1, $type, $userID)");
         if($this->conn->affected_rows > 0)
         {
             return $this->conn->insert_id;
@@ -36,15 +38,15 @@ class DonationModel{
 
     public function getDonationByDonationID($donationID)
     {
-        $sql = "SELECT * FROM donation WHERE donationID = " . $donationID . " LIMIT 1";
+        $sql = $this->conn->query("SELECT * FROM donation WHERE donationID = " . $donationID . " LIMIT 1");
         if($sql->num_rows > 0)
         {
             $this->donationID = $donationID;
-            $this->postID = 
+            $this->postID = 1; 
         }
         else
         {
-            return null
+            return null;
         }
     }
 }

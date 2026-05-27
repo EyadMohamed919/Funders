@@ -1,5 +1,6 @@
 <?php 
 require_once __DIR__ . "/DonationModel.php";
+require_once __DIR__ . "/IDonationStrategy.php";
 class DonationMoneyStrategy extends DonationModel implements IDonationStrategy{
     
     private $paymentID;
@@ -12,14 +13,9 @@ class DonationMoneyStrategy extends DonationModel implements IDonationStrategy{
     }
     public function processDonation($data)
     {   
-        $postID = $data[0];
-        $typeID = $data[1];
-        $paymentID = $data[2];
+        $donationID = $data[0];
+        $paymentID = $data[1];
 
-        // Create Donation Ticket
-        $donationID = parent::addDonation($postID, $typeID);
-
-        
         $sql = $this->conn->query("INSERT INTO donation_money_details(paymentID, donationID) 
         VALUES (" . $paymentID .", " . $donationID . ")");
         if($this->conn->affected_rows > 0)
