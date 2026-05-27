@@ -26,5 +26,20 @@ class DonationTypes{
             return [];
         }
     }
+
+    public function getDonationTypeName($typeID)
+    {
+        $sql = $this->conn->query("SELECT * FROM donation_types WHERE typeID = " . $typeID);
+        if($sql->num_rows > 0)
+        {
+            $row = $sql->fetch_assoc();
+
+            return $row["typeName"];
+        }
+        else
+        {
+            return null;
+        }
+    }
 }
 ?>
