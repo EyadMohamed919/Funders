@@ -218,6 +218,12 @@ class UserController{
 			return;
 		}
 
+		if(!isset($_SESSION["CanCreatePost"]) || !$_SESSION["CanCreatePost"])
+		{
+			echo "Permission denied";
+			return;
+		}
+
 		$method = isset($_POST["method"]) ? trim($_POST["method"]) : "document";
 		$note = isset($_POST["note"]) ? trim($_POST["note"]) : null;
 
@@ -234,6 +240,76 @@ class UserController{
 		}
 	}
 
+	public static function getAllVerificationRequests()
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
+		if(!isset($_SESSION["UserID"]))
+		{
+			echo "User not logged in";
+			return;
+		}
+
+		if(!isset($_SESSION["CanApproveVerification"]) || !$_SESSION["CanApproveVerification"])
+		{
+			echo "Permission denied";
+			return;
+		}
+
+		$userModel = new UserModel();
+		$requests = $userModel->getAllVerificationRequests();
+		header("Content-Type: application/json");
+		echo json_encode($requests);
+	}
+
+	public static function reviewVerificationRequest()
+	{
+		if($_SERVER["REQUEST_METHOD"] != "POST")
+		{
+			return;
+		}
+
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
+		if(!isset($_SESSION["UserID"]))
+		{
+			echo "User not logged in";
+			return;
+		}
+
+		if(!isset($_SESSION["CanApproveVerification"]) || !$_SESSION["CanApproveVerification"])
+		{
+			echo "Permission denied";
+			return;
+		}
+
+		$verificationID = isset($_POST["verification_id"]) ? (int) $_POST["verification_id"] : 0;
+		$status = isset($_POST["status"]) ? trim($_POST["status"]) : "";
+		$note = isset($_POST["note"]) ? trim($_POST["note"]) : null;
+
+		if($verificationID <= 0 || ($status != "approved" && $status != "rejected"))
+		{
+			echo "Invalid review data";
+			return;
+		}
+
+		$userModel = new UserModel();
+		$ok = $userModel->reviewVerificationRequest($verificationID, $status, $_SESSION["UserID"], $note);
+
+		if($ok)
+		{
+			echo "Verification reviewed";
+		}
+		else
+		{
+			echo "Failed to review verification";
+		}
+	}
+
 	private static function buildCapabilitiesByRoles($roles)
 	{
 		$userRole = new BaseUserRole();
@@ -244,7 +320,6 @@ class UserController{
 			{
 				continue;
 			}
-
 			$roleName = strtolower($role["role_name"]);
 			if($roleName == "donor")
 			{

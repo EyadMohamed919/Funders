@@ -222,5 +222,42 @@ class UserModel{
         return $sql ? true : false;
     }
 
+    public function getAllVerificationRequests()
+    {
+        $requests = [];
+        $sql = $this->conn->query("SELECT * FROM user_verification_requests ORDER BY verification_id DESC");
+        if($sql)
+        {
+            while($row = $sql->fetch_assoc())
+            {
+                $requests[] = $row;
+            }
+        }
+        return $requests;
+    }
+
+    public function reviewVerificationRequest($verificationID, $status, $reviewedBy, $note = null)
+    {
+        $verificationID = (int) $verificationID;
+        $reviewedBy = (int) $reviewedBy;
+
+        if($status != "approved" && $status != "rejected")
+        {
+            return false;
+        }
+
+        if($note === null)
+        {
+            $sql = $this->conn->query("UPDATE user_verification_requests SET request_status = '$status', reviewed_by = $reviewedBy, reviewed_at = NOW() WHERE verification_request_id = $verificationID");
+        }
+        else
+        {
+            $note = $this->conn->real_escape_string($note);
+            $sql = $this->conn->query("UPDATE user_verification_requests SET request_status = '$status', reviewed_by = $reviewedBy, reviewed_at = NOW(), rejection_reason = '$note' WHERE verification_request_id = $verificationID");
+        }
+
+        return $sql ? true : false;
+    }
+
     
 }

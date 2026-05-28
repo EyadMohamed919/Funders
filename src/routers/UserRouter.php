@@ -19,12 +19,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 		UserController::requestVerification();
 	}
+	else if(isset($_POST["reviewVerification"]))
+	{
+		UserController::reviewVerificationRequest();
+	}
 }
 else if($_SERVER["REQUEST_METHOD"] == "GET")
 {
 	if(isset($_GET["action"]) && $_GET["action"] == "my_profile")
 	{
 		UserController::getMyProfile();
+	}
+	else if(isset($_GET["action"]) && $_GET["action"] == "all_verification_requests")
+	{
+		UserController::getAllVerificationRequests();
 	}
 }
 
