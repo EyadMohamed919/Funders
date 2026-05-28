@@ -1,97 +1,45 @@
 <?php
 require_once __DIR__ . "/../model/PostModel.php";
-class PostController{
-    //show list page
-    public static function index(){
-        $postModel = new PostModel();
-        $posts = $postModel->getAllPosts();
-        include("../view/posts/index.php");
-    }
+require_once __DIR__ . "/../model/decorators/UrgentPostDecorator.php";
+require_once __DIR__ . "/../model/decorators/FeaturedPostDecorator.php";
 
-    public static function getAllPosts(){
-        $postModel = new PostModel();
-        return $postModel->getAllPosts();
-    }
-    //show single post
-    public static function show($id){
+class PostController {
+
+    public function show(int $id): void {
         $postModel = new PostModel();
         $post = $postModel->getPostById($id);
+
         if (!$post) {
-            echo "Post not found.";
-            return;
-        }
-        else        {
-            include("../view/post/show.php");
-        }
-    }
-    //show create form
-    public static function store(){
-        $title = trim($_POST['title'] ?? '');
-        $content = trim($_POST['content'] ?? '');
-        if (empty($title) || empty($content)) {
-            echo "Title and content cannot be empty.";
-            return;
+            die("Post not found.");
         }
 
-        $postModel = new PostModel();
-        $postModel->setTitle($title);
-        $postModel->setDescription($content);
-        $postModel->setTargetAmount(0);
-        $postModel->setCurrentAmount(0);
-        $postModel->setStatus('pending');
-        $postModel->setImagePath('');
-        $postModel->setCategoryId(4);
+        $post = $this->applyDecorators($post);
 
-        $postModel->createPost();
-        header("Location: /src/router/PostRouter.php");
-        exit();
-    }
-    //update post
-    public static function update($id){
-        $title = trim($_POST['title'] ?? '');
-        $content = trim($_POST['content'] ?? '');
-        if (empty($title) || empty($content)) {
-            echo "Title and content cannot be empty.";
-            return;
-        }
-
-        $postModel = new PostModel();
-        $existing = $postModel->getPostById($id);
-        if (!$existing) {
-            echo "Post not found.";
-            return;
-        }
-
-        $postModel->setPost(
-            $id,
-            $title,
-            $content,
-            $existing->getTargetAmount(),
-            $existing->getCurrentAmount(),
-            $existing->getStatus(),
-            $existing->getImagePath(),
-            $existing->getCategoryId()
-        );
-        $postModel->updatePost();
-
-        header("Location: /src/router/PostRouter.php");
-        exit();
-    }
-    //delete post
-    public static function delete($id){
-        $postModel = new PostModel();
-        $postModel->setId($id);
-        $postModel->deletePost();
-        header("Location: /src/router/PostRouter.php");
-        exit();
+        
+        include __DIR__ . "/../view/posts/single_post.php";
     }
 
-    public static function changeStatus($state, $postID)
-    {
+    public function index(): void {
         $postModel = new PostModel();
-        $postModel->changeStatus($state, $postID);
-        header("location: ../view/layout/AdminDashboard.php");
+        $rawPosts = $postModel->getAllPosts();
+        $posts = [];
+        foreach ($rawPosts as $post) {
+            $posts[] = $this->applyDecorators($post);
+        }
+
+        include __DIR__ . "/../view/posts/post_list.php";
+    }
+
+    private function applyDecorators(IPost $post): IPost {
+    
+        if ($post->currentAmount < 1000) {
+            $post = new UrgentPostDecorator($post);
+        }
+
+        if ($post->categoryId === 5) {
+            $post = new FeaturedPostDecorator($post);
+        }
+
+        return $post;
     }
 }
-
-?>
