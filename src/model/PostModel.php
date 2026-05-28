@@ -88,11 +88,4 @@ class PostModel implements IPost {
         $stmt->bind_param("sdiii", $this->title, $this->currentAmount, $this->categoryId, $this->doneeId, $this->id);
         return $stmt->execute();
     }
-
-    public function deletePost(): bool {
-        $conn = getDatabaseConnection();
-        $stmt = $conn->prepare("DELETE FROM post WHERE post_id = ?");
-        $stmt->bind_param("i", $this->id);
-        return $stmt->execute();
-    }
 }

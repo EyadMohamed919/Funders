@@ -1,58 +1,17 @@
 <?php
-require_once(__DIR__ . '/../controller/PostController.php');
-$router = $_REQUEST['router'] ?? 'index';
+require_once __DIR__ . "/../controller/PostController.php";
 
-if(isset($_GET))
-{
-    if(isset($_GET["status"]))
-    {
-        PostController::changeStatus($_GET["status"], $_GET["id"]);
-    }
-}
-switch ($router) {
-    case 'index':
-        PostController::index();
+$controller = new PostController();
+$action = $_GET["action"] ?? "index";
+
+switch ($action) {
+    case "show":
+        $id = intval($_GET["id"] ?? 0);
+        $controller->show($id);
         break;
-
-    case 'createPost':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            PostController::store();
-        } else {
-            header('Location: /src/router/PostRouter.php');
-            exit;
-        }
-        break;
-
-    case 'updatePost':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = intval($_POST['id'] ?? 0);
-            if ($id > 0) {
-                PostController::update($id);
-            } else {
-                echo 'Invalid post ID.';
-            }
-        } else {
-            header('Location: /src/router/PostRouter.php');
-            exit;
-        }
-        break;
-
-    case 'deletePost':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = intval($_POST['id'] ?? 0);
-            if ($id > 0) {
-                PostController::delete($id);
-            } else {
-                echo 'Invalid post ID.';
-            }
-        } else {
-            header('Location: /src/router/PostRouter.php');
-            exit;
-        }
-        break;
-
+    
+    case "index":
     default:
-        echo 'Unknown route: ' . htmlspecialchars($router);
+        $controller->index();
         break;
 }
-?>
