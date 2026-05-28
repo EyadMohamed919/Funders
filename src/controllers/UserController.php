@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . "/../models/User/UserModel.php";
+require_once __DIR__ . "/../models/User/Auth/EmailPasswordAuth.php";
+require_once __DIR__ . "/../models/User/Auth/PhonePasswordAuth.php";
 class UserController{
 	public static function register()
 	{
@@ -92,25 +94,29 @@ class UserController{
 			echo "Missing login fields";
 			return;
 		}
+
+		if($contactType == "email")
+		{
+			$strategy = new EmailPasswordAuth();
+		}
+		else if($contactType == "phone")
+		{
+			$strategy = new PhonePasswordAuth();
+		}
+		else
+		{
+			echo "Invalid contact type";
+			return;
+		}
+
 		$userModel = new UserModel();
-		$userID = self::findUserIDByContact($contactType, $contactValue);
+		$userID = $strategy->authenticate($contactValue, $password);
 		if(!$userID)
 		{
 			echo "Invalid credentials";
 			return;
 		}
-		$user = $userModel->getUserByID($userID);
-		if(!$user)
-		{
-			echo "Invalid credentials";
-			return;
-		}
-		$okPassword = password_verify($password, $user["password_hash"]);
-		if(!$okPassword)
-		{
-			echo "Invalid credentials";
-			return;
-		}
+
 		$roles = $userModel->getRolesByUserID($userID);
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
@@ -211,24 +217,6 @@ class UserController{
 		{
 			echo "Failed to submit verification request";
 		}
-	}
-
-	private static function findUserIDByContact($contactType, $contactValue)
-	{
-		require_once __DIR__ . "/../../config/db.php";
-		$conn = getDatabaseConnection();
-
-		$contactType = $conn->real_escape_string($contactType);
-		$contactValue = $conn->real_escape_string($contactValue);
-		$sql = $conn->query("SELECT user_id FROM user_contacts WHERE contact_type = '$contactType' AND contact_value = '$contactValue' LIMIT 1");
-
-		if($sql && $sql->num_rows > 0)
-		{
-			$row = $sql->fetch_assoc();
-			return (int) $row["user_id"];
-		}
-
-		return null;
 	}
 }
 
