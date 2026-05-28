@@ -5,7 +5,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $post = new PostModel();
     $post->title = trim($_POST["title"] ?? "");
-    $post->currentAmount = floatval($_POST["current_amount"] ?? 0);
     $post->categoryId = intval($_POST["category_id"] ?? 0);
     $post->doneeId = intval($_POST["donee_id"] ?? 0);
 
