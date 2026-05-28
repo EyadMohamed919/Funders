@@ -1,3 +1,11 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$isLoggedIn = isset($_SESSION["UserID"]);
+$isAdmin = isset($_SESSION["CanApproveVerification"]) && $_SESSION["CanApproveVerification"];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +19,26 @@
 
     <nav class="main-nav">
         <div class="nav-container">
-            <a href="#" class="brand-logo">FUNDERS</a>
+            <a href="index.php" class="brand-logo">FUNDERS</a>
             <ul class="nav-links">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="browse.php">Browse</a></li>
-                <li><a href="src/view/layout/Login.php" class="login-btn">Login</a></li>
+                <li><a href="DonationTypePage.php">Donate</a></li>
+                <li><a href="PaymentPage.php">Payment</a></li>
+                <li><a href="Invoice.php">Invoice</a></li>
+                <?php if(!$isLoggedIn): ?>
+                    <li><a href="RegisterPage.php">Register</a></li>
+                    <li><a href="LoginPage.php" class="login-btn">Login</a></li>
+                <?php else: ?>
+                    <li><a href="ProfilePage.php">Profile</a></li>
+                    <?php if($isAdmin): ?>
+                        <li><a href="AdminVerificationPage.php">Admin</a></li>
+                    <?php endif; ?>
+                    <li>
+                        <form class="logout-inline" method="POST" action="/src/routers/UserRouter.php">
+                            <button type="submit" name="logoutUser" value="1" class="logout-inline-btn">Logout</button>
+                        </form>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </nav>
@@ -24,7 +47,11 @@
         <div class="hero-content">
             <h1>Support a Cause, <span class="text-gradient">Change a Life.</span></h1>
             <p>The transparent platform for medical, educational, and community fundraising.</p>
-            <a href="src/view/layout/Login.php" class="cta-button">Start Exploring</a>
+            <?php if(!$isLoggedIn): ?>
+                <a href="RegisterPage.php" class="cta-button">Start Exploring</a>
+            <?php else: ?>
+                <a href="ProfilePage.php" class="cta-button">Go To My Profile</a>
+            <?php endif; ?>
         </div>
     </header>
 

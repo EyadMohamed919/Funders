@@ -23,6 +23,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 		UserController::reviewVerificationRequest();
 	}
+	else if(isset($_POST["logoutUser"]))
+	{
+		UserController::logout();
+	}
 }
 else if($_SERVER["REQUEST_METHOD"] == "GET")
 {
@@ -33,6 +37,10 @@ else if($_SERVER["REQUEST_METHOD"] == "GET")
 	else if(isset($_GET["action"]) && $_GET["action"] == "all_verification_requests")
 	{
 		UserController::getAllVerificationRequests();
+	}
+	else if(isset($_GET["action"]) && $_GET["action"] == "logout")
+	{
+		UserController::logout();
 	}
 }
 

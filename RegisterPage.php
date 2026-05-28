@@ -1,3 +1,17 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if(isset($_SESSION["UserID"]))
+{
+    header("Location: /ProfilePage.php");
+    exit;
+}
+
+$status = isset($_GET["status"]) ? $_GET["status"] : "";
+$msg = isset($_GET["msg"]) ? $_GET["msg"] : "";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,8 +25,9 @@
         <a href="/index.php">Home</a>
         <a href="/RegisterPage.php">Register</a>
         <a href="/LoginPage.php">Login</a>
-        <a href="/ProfilePage.php">Profile</a>
-        <a href="/AdminVerificationPage.php">Admin Verification</a>
+        <a href="/DonationTypePage.php">Donation Type</a>
+        <a href="/PaymentPage.php">Payment</a>
+        <a href="/Invoice.php">Invoice</a>
     </nav>
 
     <div class="container">
@@ -81,7 +96,10 @@
 
                 <button type="submit" name="registerUser" value="1">Register</button>
             </form>
-            <div id="registerMsg"></div>
+
+            <?php if($msg != ""): ?>
+                <div class="message <?php echo $status == 'error' ? 'error' : ''; ?>"><?php echo htmlspecialchars($msg); ?></div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -89,8 +107,6 @@
         const roleSelect = document.getElementById('roleSelect');
         const donorFields = document.getElementById('donorFields');
         const doneeFields = document.getElementById('doneeFields');
-        const registerForm = document.getElementById('registerForm');
-        const registerMsg = document.getElementById('registerMsg');
 
         function updateRoleFields() {
             const role = roleSelect.value;
@@ -100,19 +116,6 @@
 
         roleSelect.addEventListener('change', updateRoleFields);
         updateRoleFields();
-
-        registerForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const formData = new FormData(registerForm);
-            const response = await fetch('/src/routers/UserRouter.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            const text = await response.text();
-            registerMsg.className = text.toLowerCase().includes('failed') || text.toLowerCase().includes('invalid') ? 'message error' : 'message';
-            registerMsg.textContent = text;
-        });
     </script>
 </body>
 </html>

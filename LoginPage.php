@@ -1,3 +1,17 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if(isset($_SESSION["UserID"]))
+{
+    header("Location: /ProfilePage.php");
+    exit;
+}
+
+$status = isset($_GET["status"]) ? $_GET["status"] : "";
+$msg = isset($_GET["msg"]) ? $_GET["msg"] : "";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +23,11 @@
 <body>
     <nav class="navbar">
         <a href="/index.php">Home</a>
-        <a href="/RegisterPage.php">Register</a>
         <a href="/LoginPage.php">Login</a>
-        <a href="/ProfilePage.php">Profile</a>
-        <a href="/AdminVerificationPage.php">Admin Verification</a>
+        <a href="/RegisterPage.php">Register</a>
+        <a href="/DonationTypePage.php">Donation Type</a>
+        <a href="/PaymentPage.php">Payment</a>
+        <a href="/Invoice.php">Invoice</a>
     </nav>
 
     <div class="container">
@@ -39,26 +54,15 @@
 
                 <button type="submit" name="loginUser" value="1">Login</button>
             </form>
-            <div id="loginMsg"></div>
+
+            <?php if($msg != ""): ?>
+                <div class="message <?php echo $status == 'error' ? 'error' : ''; ?>"><?php echo htmlspecialchars($msg); ?></div>
+            <?php endif; ?>
+
+            <?php if($status == "error"): ?>
+                <a class="register-link" href="/RegisterPage.php">No account? Register here</a>
+            <?php endif; ?>
         </div>
     </div>
-
-    <script>
-        const loginForm = document.getElementById('loginForm');
-        const loginMsg = document.getElementById('loginMsg');
-
-        loginForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const formData = new FormData(loginForm);
-            const response = await fetch('/src/routers/UserRouter.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            const text = await response.text();
-            loginMsg.className = text.toLowerCase().includes('invalid') || text.toLowerCase().includes('failed') ? 'message error' : 'message';
-            loginMsg.textContent = text;
-        });
-    </script>
 </body>
 </html>

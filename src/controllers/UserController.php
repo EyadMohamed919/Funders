@@ -21,12 +21,14 @@ class UserController{
 
 		if($fullName == "" || $password == "" || $contactValue == "")
 		{
-			echo "Missing required fields";
+			header("Location: /RegisterPage.php?status=error&msg=" . urlencode("Missing required fields"));
+			exit;
 			return;
 		}
 		if($role != "donor" && $role != "donee" && $role != "admin")
 		{
-			echo "Invalid role";
+			header("Location: /RegisterPage.php?status=error&msg=" . urlencode("Invalid role"));
+			exit;
 			return;
 		}
 
@@ -35,19 +37,22 @@ class UserController{
 		$userID = $userModel->createUser($fullName, $passwordHash);
 		if(!$userID)
 		{
-			echo "Failed to create user";
+			header("Location: /RegisterPage.php?status=error&msg=" . urlencode("Failed to create user"));
+			exit;
 			return;
 		}
 		$savedContact = $userModel->addContact($userID, $contactType, $contactValue, 1, 0);
 		if(!$savedContact)
 		{
-			echo "User created, but failed to save contact";
+			header("Location: /RegisterPage.php?status=error&msg=" . urlencode("User created, but failed to save contact"));
+			exit;
 			return;
 		}
 		$savedRole = $userModel->assignRole($userID, $role);
 		if(!$savedRole)
 		{
-			echo "User created, but failed to assign role";
+			header("Location: /RegisterPage.php?status=error&msg=" . urlencode("User created, but failed to assign role"));
+			exit;
 			return;
 		}
 
@@ -85,7 +90,8 @@ class UserController{
 		$_SESSION["CanCreatePost"] = $capabilities["canCreatePost"];
 		$_SESSION["CanApproveVerification"] = $capabilities["canApproveVerification"];
 
-		echo "User registered successfully";
+		header("Location: /ProfilePage.php?status=success&msg=" . urlencode("User registered successfully"));
+		exit;
 	}
 
 	public static function login()
@@ -101,7 +107,8 @@ class UserController{
 
 		if($contactValue == "" || $password == "")
 		{
-			echo "Missing login fields";
+			header("Location: /LoginPage.php?status=error&msg=" . urlencode("Missing login fields"));
+			exit;
 			return;
 		}
 
@@ -115,7 +122,8 @@ class UserController{
 		}
 		else
 		{
-			echo "Invalid contact type";
+			header("Location: /LoginPage.php?status=error&msg=" . urlencode("Invalid contact type"));
+			exit;
 			return;
 		}
 
@@ -123,7 +131,8 @@ class UserController{
 		$userID = $strategy->authenticate($contactValue, $password);
 		if(!$userID)
 		{
-			echo "Invalid credentials";
+			header("Location: /LoginPage.php?status=error&msg=" . urlencode("Invalid credentials"));
+			exit;
 			return;
 		}
 
@@ -139,7 +148,8 @@ class UserController{
 		$_SESSION["CanCreatePost"] = $capabilities["canCreatePost"];
 		$_SESSION["CanApproveVerification"] = $capabilities["canApproveVerification"];
 
-		echo "Login successful";
+		header("Location: /ProfilePage.php?status=success&msg=" . urlencode("Login successful"));
+		exit;
 	}
 	public static function getMyProfile()
 	{
@@ -308,6 +318,18 @@ class UserController{
 		{
 			echo "Failed to review verification";
 		}
+	}
+
+	public static function logout()
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
+		$_SESSION = [];
+		session_destroy();
+		header("Location: /LoginPage.php");
+		exit;
 	}
 
 	private static function buildCapabilitiesByRoles($roles)

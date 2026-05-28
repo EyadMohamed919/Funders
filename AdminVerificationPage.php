@@ -1,3 +1,20 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if(!isset($_SESSION["UserID"]))
+{
+    header("Location: /LoginPage.php");
+    exit;
+}
+
+if(!isset($_SESSION["CanApproveVerification"]) || !$_SESSION["CanApproveVerification"])
+{
+    header("Location: /ProfilePage.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +30,13 @@
         <a href="/LoginPage.php">Login</a>
         <a href="/ProfilePage.php">Profile</a>
         <a href="/AdminVerificationPage.php">Admin Verification</a>
+        <a href="/DonationTypePage.php">Donation Type</a>
+        <a href="/PaymentPage.php">Payment</a>
+        <a href="/Invoice.php">Invoice</a>
+
+        <form class="logout-form" method="POST" action="/src/routers/UserRouter.php">
+            <button class="logout-btn" type="submit" name="logoutUser" value="1">Logout</button>
+        </form>
     </nav>
 
     <div class="container">
