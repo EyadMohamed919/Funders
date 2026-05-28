@@ -1,70 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f9f4; /* Soft, light green-tinted background */
-    color: #2b4c2b; /* Deep forest green for text */
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    min-height: 100vh;
 }
 
-.payment-container {
-    background-color: #ffffff; /* Crisp white background */
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(43, 76, 43, 0.1); /* Subtle green-tinted shadow */
-    width: 100%;
-    max-width: 400px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Spaces out the inputs evenly */
-}
-
-input[type="number"],
-input[type="text"],
-select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #a2cfa2; /* Soft green border */
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 16px;
-    color: #2b4c2b;
+.card {
     background-color: #ffffff;
-    transition: border-color 0.3s ease;
+    border-radius: 12px;
+    padding: 40px;
+    width: 420px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-input:focus,
-select:focus {
+h2 {
+    color: #1a1a1a;
+    margin-bottom: 24px;
+    font-size: 22px;
+    border-left: 4px solid #2e7d32;
+    padding-left: 12px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #444444;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1a1a1a;
+    background-color: #fafafa;
     outline: none;
-    border-color: #2e7d32; /* Stronger green when active */
+    transition: border-color 0.2s;
 }
 
-#visa_fields, 
-#ewallet_fields, 
-#instapay_fields {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+input:focus, select:focus {
+    border-color: #2e7d32;
+    background-color: #ffffff;
 }
 
-button[type="submit"] {
-    background-color: #2e7d32; /* Primary Green */
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #2e7d32;
     color: #ffffff;
     border: none;
-    padding: 14px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-top: 10px;
+    margin-top: 8px;
+    transition: background-color 0.2s;
 }
 
-button[type="submit"]:hover {
-    background-color: #1b5e20; /* Darker green on hover */
+button:hover {
+    background-color: #1b5e20;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #eeeeee;
+    margin: 20px 0;
 }

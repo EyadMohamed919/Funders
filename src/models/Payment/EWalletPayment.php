@@ -6,7 +6,5 @@ class EWalletPayment implements PaymentStrategy
     {
         $walletNumber = $data['wallet_number'];
 
-        echo "Paid $amount using E-Wallet";
-        echo "Wallet Number: $walletNumber";
     }
 }
