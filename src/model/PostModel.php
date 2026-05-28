@@ -8,23 +8,29 @@ class PostModel implements IPost {
     public int $doneeId;
     public int $categoryId;
     public string $title;
+    public bool $featured;
+    public bool $urgent;
 
     public function __construct(
         int $id = 0,
         int $doneeId = 0,
         int $categoryId = 0,
-        string $title = ""
+        string $title = "",
+        bool $featured = false,
+        bool $urgent = false
     ) {
         $this->id = $id;
         $this->doneeId = $doneeId;
         $this->categoryId = $categoryId;
         $this->title = $title;
+        $this->featured = $featured;
+        $this->urgent= $urgent;
     }
-
 
     public function displayPost(): string {
         return "<h3>{$this->title}</h3>";
     }
+
 
     public function getPostById(int $id): ?self {
         $conn = getDatabaseConnection();
@@ -35,7 +41,9 @@ class PostModel implements IPost {
                 (int)$row["post_id"],
                 (int)($row["donee_id"] ?? 0),
                 (int)$row["category_id"],
-                $row["title"] ?? ""
+                $row["title"] ?? "",
+                (bool)($row["featured"] ?? 0),
+                (bool)($row["urgent"] ?? 0)
             );
         }
         return null;
@@ -51,7 +59,9 @@ class PostModel implements IPost {
                 (int)$row["post_id"],
                 (int)($row["donee_id"] ?? 0),
                 (int)$row["category_id"],
-                $row["title"] ?? ""
+                $row["title"] ?? "",
+                (bool)($row["featured"] ?? 0),
+                (bool)($row["urgent"] ?? 0)   
             );
         }
         return $posts;
@@ -60,9 +70,13 @@ class PostModel implements IPost {
     public function createPost(): bool {
         $conn = getDatabaseConnection();
         $title = $conn->real_escape_string($this->title);
+        $featuredInt = (int)$this->featured;
+        $urgentInt = (int)$this->urgent;
+        
+        
         $result = $conn->query(
-            "INSERT INTO post (title, category_id, donee_id) 
-             VALUES ('$title', {$this->categoryId}, {$this->doneeId})"
+            "INSERT INTO post (title, category_id, donee_id, featured, urgent) 
+             VALUES ('$title', {$this->categoryId}, {$this->doneeId}, $featuredInt, $urgentInt)"  
         );
         return $result !== false;
     }
@@ -70,9 +84,16 @@ class PostModel implements IPost {
     public function updatePost(): bool {
         $conn = getDatabaseConnection();
         $title = $conn->real_escape_string($this->title);
+        $featuredInt = (int)$this->featured;  
+        $urgentInt = (int)$this->urgent;
+        
         $result = $conn->query(
             "UPDATE post 
-             SET title = '$title', category_id = {$this->categoryId}, donee_id = {$this->doneeId} 
+             SET title = '$title', 
+                 category_id = {$this->categoryId}, 
+                 donee_id = {$this->doneeId},
+                 featured = $featuredInt
+                 urgent = $urgentInt
              WHERE post_id = {$this->id}"
         );
         return $result !== false;

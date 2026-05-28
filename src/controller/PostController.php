@@ -14,8 +14,6 @@ class PostController {
         }
 
         $post = $this->applyDecorators($post);
-
-        
         include __DIR__ . "/../view/posts/single_post.php";
     }
 
@@ -30,16 +28,13 @@ class PostController {
         include __DIR__ . "/../view/posts/post_list.php";
     }
 
-    private function applyDecorators(IPost $post): IPost {
+    private function applyDecorators(PostModel $post): IPost {
     
-        if ($post->currentAmount < 1000) {
+        if ($post->featured) {
+            $post = new FeaturedPostDecorator($post);
+        }else if ($post->urgent) {
             $post = new UrgentPostDecorator($post);
         }
-
-        if ($post->categoryId === 5) {
-            $post = new FeaturedPostDecorator($post);
-        }
-
         return $post;
     }
 }
