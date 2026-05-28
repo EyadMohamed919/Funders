@@ -2,6 +2,10 @@
 require_once __DIR__ . "/../models/User/UserModel.php";
 require_once __DIR__ . "/../models/User/Auth/EmailPasswordAuth.php";
 require_once __DIR__ . "/../models/User/Auth/PhonePasswordAuth.php";
+require_once __DIR__ . "/../models/User/Roles/BaseUserRole.php";
+require_once __DIR__ . "/../models/User/Roles/DonorRoleDecorator.php";
+require_once __DIR__ . "/../models/User/Roles/DoneeRoleDecorator.php";
+require_once __DIR__ . "/../models/User/Roles/AdminRoleDecorator.php";
 class UserController{
 	public static function register()
 	{
@@ -75,6 +79,12 @@ class UserController{
 		}
 		$_SESSION["UserID"] = $userID;
 		$_SESSION["UserRole"] = $role;
+
+		$capabilities = self::buildCapabilitiesByRoles([ ["role_name" => $role] ]);
+		$_SESSION["CanDonate"] = $capabilities["canDonate"];
+		$_SESSION["CanCreatePost"] = $capabilities["canCreatePost"];
+		$_SESSION["CanApproveVerification"] = $capabilities["canApproveVerification"];
+
 		echo "User registered successfully";
 	}
 
@@ -123,6 +133,11 @@ class UserController{
 		}
 		$_SESSION["UserID"] = $userID;
 		$_SESSION["UserRole"] = isset($roles[0]["role_name"]) ? $roles[0]["role_name"] : null;
+
+		$capabilities = self::buildCapabilitiesByRoles($roles);
+		$_SESSION["CanDonate"] = $capabilities["canDonate"];
+		$_SESSION["CanCreatePost"] = $capabilities["canCreatePost"];
+		$_SESSION["CanApproveVerification"] = $capabilities["canApproveVerification"];
 
 		echo "Login successful";
 	}
@@ -217,6 +232,39 @@ class UserController{
 		{
 			echo "Failed to submit verification request";
 		}
+	}
+
+	private static function buildCapabilitiesByRoles($roles)
+	{
+		$userRole = new BaseUserRole();
+
+		foreach($roles as $role)
+		{
+			if(!isset($role["role_name"]))
+			{
+				continue;
+			}
+
+			$roleName = strtolower($role["role_name"]);
+			if($roleName == "donor")
+			{
+				$userRole = new DonorRoleDecorator($userRole);
+			}
+			else if($roleName == "donee")
+			{
+				$userRole = new DoneeRoleDecorator($userRole);
+			}
+			else if($roleName == "admin")
+			{
+				$userRole = new AdminRoleDecorator($userRole);
+			}
+		}
+
+		return [
+			"canDonate" => $userRole->canDonate(),
+			"canCreatePost" => $userRole->canCreatePost(),
+			"canApproveVerification" => $userRole->canApproveVerification(),
+		];
 	}
 }
 
