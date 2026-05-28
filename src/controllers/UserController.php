@@ -92,7 +92,6 @@ class UserController{
 			echo "Missing login fields";
 			return;
 		}
-
 		$userModel = new UserModel();
 		$userID = self::findUserIDByContact($contactType, $contactValue);
 		if(!$userID)
@@ -100,45 +99,37 @@ class UserController{
 			echo "Invalid credentials";
 			return;
 		}
-
 		$user = $userModel->getUserByID($userID);
 		if(!$user)
 		{
 			echo "Invalid credentials";
 			return;
 		}
-
 		$okPassword = password_verify($password, $user["password_hash"]);
 		if(!$okPassword)
 		{
 			echo "Invalid credentials";
 			return;
 		}
-
 		$roles = $userModel->getRolesByUserID($userID);
-
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
-
 		$_SESSION["UserID"] = $userID;
 		$_SESSION["UserRole"] = isset($roles[0]["role_name"]) ? $roles[0]["role_name"] : null;
 
 		echo "Login successful";
 	}
-
 	public static function getMyProfile()
 	{
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
-
 		if(!isset($_SESSION["UserID"]))
 		{
 			echo "User not logged in";
 			return;
 		}
-
 		$userModel = new UserModel();
 		$profile = $userModel->getUserWithRolesAndAttributes($_SESSION["UserID"]);
 		if(!$profile)
@@ -146,7 +137,6 @@ class UserController{
 			echo "User not found";
 			return;
 		}
-
 		header("Content-Type: application/json");
 		echo json_encode($profile);
 	}
