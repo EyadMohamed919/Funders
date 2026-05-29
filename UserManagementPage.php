@@ -106,11 +106,15 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 $msg = isset($_GET['msg']) ? $_GET['msg'] : '';
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $roleFilterID = isset($_GET['role_id']) ? (int) $_GET['role_id'] : 0;
+$detailsUserID = isset($_GET['details_user_id']) ? (int) $_GET['details_user_id'] : 0;
 
 $users = [];
 $roles = [];
 $userRoles = [];
 $contacts = [];
+$attributes = [];
+$attributeDefinitions = [];
+$verificationRequests = [];
 
 $usersResult = $conn->query('SELECT user_id, full_name, created_at FROM users ORDER BY user_id ASC');
 if ($usersResult) {
@@ -140,9 +144,35 @@ if ($contactsResult) {
     }
 }
 
+$attributeDefinitionsResult = $conn->query('SELECT attribute_id, attribute_name FROM user_attribute_definitions');
+if ($attributeDefinitionsResult) {
+    while ($row = $attributeDefinitionsResult->fetch_assoc()) {
+        $attributeDefinitions[] = $row;
+    }
+}
+
+$attributesResult = $conn->query('SELECT user_id, attribute_id, value_text, updated_at FROM user_attribute_values ORDER BY updated_at DESC');
+if ($attributesResult) {
+    while ($row = $attributesResult->fetch_assoc()) {
+        $attributes[] = $row;
+    }
+}
+
+$verificationResult = $conn->query('SELECT verification_id, user_id, method, status, note, submitted_at, reviewed_at, reviewed_by FROM user_verification_requests ORDER BY verification_id DESC');
+if ($verificationResult) {
+    while ($row = $verificationResult->fetch_assoc()) {
+        $verificationRequests[] = $row;
+    }
+}
+
 $roleNameByID = [];
 foreach ($roles as $role) {
     $roleNameByID[(int) $role['role_id']] = $role['role_name'];
+}
+
+$attributeNameByID = [];
+foreach ($attributeDefinitions as $definition) {
+    $attributeNameByID[(int) $definition['attribute_id']] = $definition['attribute_name'];
 }
 
 $roleIDsByUser = [];
@@ -156,11 +186,34 @@ foreach ($userRoles as $row) {
 }
 
 $primaryContactByUser = [];
+$contactsByUser = [];
 foreach ($contacts as $row) {
     $uid = (int) $row['user_id'];
+    if (!isset($contactsByUser[$uid])) {
+        $contactsByUser[$uid] = [];
+    }
+    $contactsByUser[$uid][] = $row;
     if (!isset($primaryContactByUser[$uid]) || (int) $row['is_primary'] === 1) {
         $primaryContactByUser[$uid] = $row['contact_value'];
     }
+}
+
+$attributesByUser = [];
+foreach ($attributes as $row) {
+    $uid = (int) $row['user_id'];
+    if (!isset($attributesByUser[$uid])) {
+        $attributesByUser[$uid] = [];
+    }
+    $attributesByUser[$uid][] = $row;
+}
+
+$verificationByUser = [];
+foreach ($verificationRequests as $row) {
+    $uid = (int) $row['user_id'];
+    if (!isset($verificationByUser[$uid])) {
+        $verificationByUser[$uid] = [];
+    }
+    $verificationByUser[$uid][] = $row;
 }
 
 $filteredUsers = [];
@@ -181,6 +234,16 @@ foreach ($users as $user) {
 
     if ($matchesRole && $matchesText) {
         $filteredUsers[] = $user;
+    }
+}
+
+$selectedUser = null;
+if ($detailsUserID > 0) {
+    foreach ($users as $user) {
+        if ((int) $user['user_id'] === $detailsUserID) {
+            $selectedUser = $user;
+            break;
+        }
     }
 }
 ?>
@@ -276,6 +339,8 @@ foreach ($users as $user) {
                                     <td><?php echo htmlspecialchars($roleName); ?></td>
                                     <td><?php echo htmlspecialchars($user['created_at']); ?></td>
                                     <td>
+                                        <a class="secondary-link" href="/UserManagementPage.php?<?php echo htmlspecialchars(http_build_query(['q' => $q, 'role_id' => $roleFilterID, 'details_user_id' => $uid])); ?>">Details</a>
+
                                         <form method="POST" action="/UserManagementPage.php" class="inline-form">
                                             <input type="hidden" name="manage_action" value="update_user">
                                             <input type="hidden" name="user_id" value="<?php echo $uid; ?>">
@@ -305,6 +370,107 @@ foreach ($users as $user) {
                 <div class="empty-state">No users found for this filter.</div>
             <?php endif; ?>
         </div>
+
+        <?php if ($selectedUser): ?>
+            <?php
+                $selectedUserID = (int) $selectedUser['user_id'];
+                $selectedRoleIDs = isset($roleIDsByUser[$selectedUserID]) ? $roleIDsByUser[$selectedUserID] : [];
+                $selectedContacts = isset($contactsByUser[$selectedUserID]) ? $contactsByUser[$selectedUserID] : [];
+                $selectedAttributes = isset($attributesByUser[$selectedUserID]) ? $attributesByUser[$selectedUserID] : [];
+                $selectedVerification = isset($verificationByUser[$selectedUserID]) ? $verificationByUser[$selectedUserID] : [];
+            ?>
+            <div class="card panel">
+                <h2>User Details: <?php echo htmlspecialchars($selectedUser['full_name']); ?> (#<?php echo $selectedUserID; ?>)</h2>
+
+                <div class="split-grid">
+                    <div>
+                        <h3>Basic Info</h3>
+                        <div class="kv"><strong>User ID</strong><span><?php echo $selectedUserID; ?></span></div>
+                        <div class="kv"><strong>Full Name</strong><span><?php echo htmlspecialchars($selectedUser['full_name']); ?></span></div>
+                        <div class="kv"><strong>Created At</strong><span><?php echo htmlspecialchars($selectedUser['created_at']); ?></span></div>
+                        <div class="kv"><strong>Role</strong><span>
+                            <?php
+                                $roleLabels = [];
+                                foreach ($selectedRoleIDs as $roleID) {
+                                    if (isset($roleNameByID[$roleID])) {
+                                        $roleLabels[] = $roleNameByID[$roleID];
+                                    }
+                                }
+                                echo htmlspecialchars(count($roleLabels) > 0 ? implode(', ', $roleLabels) : 'none');
+                            ?>
+                        </span></div>
+                    </div>
+
+                    <div>
+                        <h3>Contacts</h3>
+                        <?php if (count($selectedContacts) > 0): ?>
+                            <table class="table">
+                                <thead>
+                                    <tr><th>Value</th><th>Primary</th></tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($selectedContacts as $contact): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($contact['contact_value']); ?></td>
+                                            <td><?php echo !empty($contact['is_primary']) ? 'Yes' : 'No'; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php else: ?>
+                            <div class="empty-state">No contacts found.</div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="split-grid">
+                    <div>
+                        <h3>Attributes</h3>
+                        <?php if (count($selectedAttributes) > 0): ?>
+                            <table class="table">
+                                <thead>
+                                    <tr><th>Name</th><th>Value</th><th>Updated</th></tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($selectedAttributes as $attribute): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($attributeNameByID[(int) $attribute['attribute_id']] ?? 'unknown'); ?></td>
+                                            <td><?php echo htmlspecialchars($attribute['value_text']); ?></td>
+                                            <td><?php echo htmlspecialchars($attribute['updated_at']); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php else: ?>
+                            <div class="empty-state">No attributes found.</div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div>
+                        <h3>Verification History</h3>
+                        <?php if (count($selectedVerification) > 0): ?>
+                            <table class="table">
+                                <thead>
+                                    <tr><th>ID</th><th>Method</th><th>Status</th><th>Submitted</th></tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($selectedVerification as $verification): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($verification['verification_id']); ?></td>
+                                            <td><?php echo htmlspecialchars($verification['method']); ?></td>
+                                            <td><?php echo htmlspecialchars($verification['status']); ?></td>
+                                            <td><?php echo htmlspecialchars($verification['submitted_at']); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php else: ?>
+                            <div class="empty-state">No verification history found.</div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 </body>
 </html>

@@ -36,6 +36,7 @@ $canApproveVerification = isset($_SESSION['CanApproveVerification']) && $_SESSIO
         <?php if ($canApproveVerification): ?>
             <a href="/AdminVerificationPage.php">Admin Verification</a>
             <a href="/UserManagementPage.php">User Management</a>
+            <a href="/AdminDatabaseTablesPage.php">Database Tables</a>
         <?php endif; ?>
         <a href="/DonationTypePage.php">Donation Type</a>
         <a href="/PaymentPage.php">Payment</a>
@@ -179,6 +180,7 @@ $canApproveVerification = isset($_SESSION['CanApproveVerification']) && $_SESSIO
                     <?php if ($canApproveVerification): ?>
                         <a class="secondary-link" href="/AdminVerificationPage.php">Open Admin Verification</a>
                         <a class="secondary-link" href="/UserManagementPage.php">Open User Management</a>
+                        <a class="secondary-link" href="/AdminDatabaseTablesPage.php">Open Database Tables</a>
                     <?php endif; ?>
                     <?php if ($canCreatePost): ?>
                         <div class="empty-state">Donee tools are available for your role.</div>

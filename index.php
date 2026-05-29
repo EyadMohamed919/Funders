@@ -33,6 +33,7 @@ $isAdmin = isset($_SESSION["CanApproveVerification"]) && $_SESSION["CanApproveVe
                     <?php if($isAdmin): ?>
                         <li><a href="AdminVerificationPage.php">Admin</a></li>
                         <li><a href="UserManagementPage.php">User Management</a></li>
+                        <li><a href="AdminDatabaseTablesPage.php">Database Tables</a></li>
                     <?php endif; ?>
                     <li>
                         <form class="logout-inline" method="POST" action="/src/routers/UserRouter.php">
