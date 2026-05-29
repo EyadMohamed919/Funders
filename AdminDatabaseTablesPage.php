@@ -36,7 +36,9 @@ $tableOptions = [
     'user_roles',
     'user_attribute_definitions',
     'user_attribute_values',
-    'user_verification_requests'
+    'user_verification_requests',
+    'payments',
+    'payment_attributes'
 ];
 
 $selectedTable = isset($_GET['table']) ? $_GET['table'] : 'users';

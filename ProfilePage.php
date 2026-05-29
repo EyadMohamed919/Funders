@@ -20,6 +20,17 @@ $contacts = $profile['contacts'] ?? [];
 $canDonate = isset($_SESSION['CanDonate']) && $_SESSION['CanDonate'];
 $canCreatePost = isset($_SESSION['CanCreatePost']) && $_SESSION['CanCreatePost'];
 $canApproveVerification = isset($_SESSION['CanApproveVerification']) && $_SESSION['CanApproveVerification'];
+
+$conn = getDatabaseConnection();
+$userId = (int) $_SESSION['UserID'];
+$transactionResult = $conn->query(" SELECT p.id, p.payment_method, p.amount, a.attribute_name, a.attribute_value FROM payments p JOIN payment_attributes a ON p.id = a.payment_id WHERE p.user_id = $userId ORDER BY p.id DESC");
+$transactions = [];
+if ($transactionResult) {
+    while ($row = $transactionResult->fetch_assoc()) {
+        $transactions[] = $row;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -188,6 +199,39 @@ $canApproveVerification = isset($_SESSION['CanApproveVerification']) && $_SESSIO
                 </div>
             </div>
         </div>
+
+        <div class="split-grid">
+            <div class="card panel" style="grid-column: span 2;">
+                <h2>My Transactions</h2>
+                <?php if (count($transactions) > 0): ?>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Payment Method</th>
+                                <th>Amount</th>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($transactions as $transaction): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($transaction['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($transaction['payment_method']); ?></td>
+                                    <td><?php echo htmlspecialchars($transaction['amount']); ?></td>
+                                    <td><?php echo htmlspecialchars($transaction['attribute_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($transaction['attribute_value']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="empty-state">No transactions found.</div>
+                <?php endif; ?>
+            </div>
+        </div>
+
     </div>
 </body>
 </html>
