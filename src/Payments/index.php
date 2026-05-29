@@ -1,5 +1,10 @@
 <?php
 
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once "PaymentStrategy.php";
 require_once "VisaPayment.php";
 require_once "EWalletPayment.php";
