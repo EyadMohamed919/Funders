@@ -25,9 +25,9 @@ class UserController{
 			exit;
 			return;
 		}
-		if($role != "donor" && $role != "donee" && $role != "admin")
+		if($role != "donor" && $role != "donee")
 		{
-			header("Location: /RegisterPage.php?status=error&msg=" . urlencode("Invalid role"));
+			header("Location: /RegisterPage.php?status=error&msg=" . urlencode("Admins are created manually"));
 			exit;
 			return;
 		}
@@ -60,9 +60,7 @@ class UserController{
 		if($role == "donor")
 		{
 			$isAnonymous = isset($_POST["is_anonymous"]) ? $_POST["is_anonymous"] : "0";
-			$isLaundering = isset($_POST["is_laundering_flag"]) ? $_POST["is_laundering_flag"] : "0";
 			$userModel->saveAttributeValue($userID, "is_anonymous", $isAnonymous);
-			$userModel->saveAttributeValue($userID, "is_laundering_flag", $isLaundering);
 		}
 		else if($role == "donee")
 		{

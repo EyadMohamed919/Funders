@@ -66,27 +66,23 @@ $isLoggedIn = false;
                         <select name="role" id="roleSelect" required>
                             <option value="donor">donor</option>
                             <option value="donee">donee</option>
-                            <option value="admin">admin</option>
                         </select>
                     </div>
                 </div>
 
                 <div id="donorFields" class="subpanel">
-                    <h3>Donor Fields</h3>
-                    <div class="form-grid">
-                        <div class="field">
-                            <label>is_anonymous</label>
-                            <input type="number" name="is_anonymous" min="0" max="1" value="0">
-                        </div>
-                        <div class="field">
-                            <label>is_laundering_flag</label>
-                            <input type="number" name="is_laundering_flag" min="0" max="1" value="0">
-                        </div>
+                    <h3>Donor Preference</h3>
+                    <div class="field">
+                        <label>Prefer Anonymous Donations?</label>
+                        <select name="is_anonymous">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
                     </div>
                 </div>
 
                 <div id="doneeFields" class="subpanel" style="display:none;">
-                    <h3>Donee Fields</h3>
+                    <h3>Donee Details</h3>
                     <div class="form-grid">
                         <div class="field">
                             <label>National ID</label>
