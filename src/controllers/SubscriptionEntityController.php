@@ -1,104 +1,118 @@
 <?php
 namespace App\Controllers;
 
-use App\Models\SubscriptionEntity;
-use App\Models\SubscriptionAttributeValue;
-use App\Models\AttributeDefinition;
+class SubscriptionEntityController
+{
+    private \mysqli $db;
 
-class SubscriptionEntityController {
-    private \PDO $db;
-
-    public function __construct(\PDO $db) {
+    public function __construct(\mysqli $db)
+    {
         $this->db = $db;
     }
 
-    public function create(int $subscriptionId): int {
-        $stmt = $this->db->prepare("INSERT INTO subscription_entities (subscription_id) VALUES (:subscription_id)");
-        $stmt->execute([':subscription_id' => $subscriptionId]);
-        return (int) $this->db->lastInsertId();
-    }
-
-    public function getById(int $entityId) {
-        $stmt = $this->db->prepare("SELECT * FROM subscription_entities WHERE entity_id = :id");
-        $stmt->bindValue(':id', $entityId, \PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
-    }
-
-    public function getAttributes(int $entityId): array {
-        $stmt = $this->db->prepare(
-            "SELECT sav.value_id, sav.value, ad.attribute_id, ad.name, ad.data_type, ad.allowed_values
-             FROM subscription_attribute_values sav
-             JOIN attribute_definitions ad ON sav.attribute_id = ad.attribute_id
-             WHERE sav.entity_id = :entity_id
-             ORDER BY ad.name"
+    public function getBySubscriptionId(int $subscriptionId): array
+    {
+        $entities = $this->runSelect(
+            'SELECT entity_id, subscription_id, created_at FROM subscription_entities WHERE subscription_id = ? ORDER BY entity_id',
+            'i',
+            [$subscriptionId]
         );
-        $stmt->bindValue(':entity_id', $entityId, \PDO::PARAM_INT);
-        $stmt->execute();
 
-        $rows = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $rows[] = $row;
+        if (empty($entities)) {
+            return [];
         }
 
+        $entityIds = array_column($entities, 'entity_id');
+        $valueRows = $this->runSelect(
+            sprintf(
+                'SELECT entity_id, attribute_id, value FROM subscription_attribute_values WHERE entity_id IN (%s)',
+                implode(',', array_fill(0, count($entityIds), '?'))
+            ),
+            str_repeat('i', count($entityIds)),
+            array_map('intval', $entityIds)
+        );
+
+        $attributeIds = array_unique(array_column($valueRows, 'attribute_id'));
+        $attributeNames = [];
+        if (!empty($attributeIds)) {
+            $definitions = $this->runSelect(
+                sprintf(
+                    'SELECT attribute_id, name FROM attribute_definitions WHERE attribute_id IN (%s)',
+                    implode(',', array_fill(0, count($attributeIds), '?'))
+                ),
+                str_repeat('i', count($attributeIds)),
+                array_map('intval', $attributeIds)
+            );
+
+            foreach ($definitions as $def) {
+                $attributeNames[$def['attribute_id']] = $def['name'];
+            }
+        }
+
+        $entityValues = [];
+        foreach ($valueRows as $valueRow) {
+            $entityId = $valueRow['entity_id'];
+            $entityValues[$entityId][] = [
+                'attribute_id' => $valueRow['attribute_id'],
+                'value' => $valueRow['value'],
+            ];
+        }
+
+        foreach ($entities as &$entity) {
+            $attributes = [];
+            $values = $entityValues[$entity['entity_id']] ?? [];
+            foreach ($values as $valueItem) {
+                $attributeName = $attributeNames[$valueItem['attribute_id']] ?? 'attribute_' . $valueItem['attribute_id'];
+                $attributes[] = $attributeName . ':' . $valueItem['value'];
+            }
+            $entity['attributes'] = implode('|', $attributes);
+        }
+        unset($entity);
+
+        return $entities;
+    }
+
+    private function runSelect(string $sql, string $types, array $params): array
+    {
+        $stmt = $this->db->prepare($sql);
+        if ($stmt === false) {
+            throw new \RuntimeException('SQL prepare failed: ' . $this->db->error);
+        }
+
+        if ($types !== '') {
+            $this->bindParams($stmt, $types, $params);
+        }
+
+        if (! $stmt->execute()) {
+            throw new \RuntimeException('SQL execute failed: ' . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+        $rows = [];
+
+        if ($result !== false) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+            $result->free();
+        }
+
+        $stmt->close();
         return $rows;
     }
 
-    public function setAttribute(int $entityId, int $attributeId, string $value): bool {
-        // Verify attribute exists
-        $attrStmt = $this->db->prepare("SELECT * FROM attribute_definitions WHERE attribute_id = :id");
-        $attrStmt->bindValue(':id', $attributeId, \PDO::PARAM_INT);
-        $attrStmt->execute();
-        $attribute = $attrStmt->fetch(\PDO::FETCH_ASSOC);
-
-        if (!$attribute) {
-            throw new \Exception("Attribute not found");
+    private function bindParams(\mysqli_stmt $stmt, string $types, array $params): void
+    {
+        if ($params === []) {
+            return;
         }
 
-        // Validate value using AttributeDefinition model
-        $def = new AttributeDefinition(
-            $attribute['attribute_id'],
-            $attribute['name'],
-            $attribute['data_type'],
-            $attribute['allowed_values']
-        );
-
-        if (!$def->isValueAllowed($value)) {
-            throw new \Exception("Invalid value for attribute: {$attribute['name']}");
+        $refs = [];
+        foreach ($params as $key => $value) {
+            $refs[$key] = &$params[$key];
         }
 
-        $stmt = $this->db->prepare(
-            "INSERT INTO subscription_attribute_values (entity_id, attribute_id, value)
-             VALUES (:entity_id, :attribute_id, :value)
-             ON DUPLICATE KEY UPDATE value = :value"
-        );
-
-        return $stmt->execute([
-            ':entity_id' => $entityId,
-            ':attribute_id' => $attributeId,
-            ':value' => $value,
-        ]);
-    }
-
-    /**
-     * Remove an attribute
-     */
-    public function removeAttribute(int $entityId, int $attributeId): bool {
-        $stmt = $this->db->prepare(
-            "DELETE FROM subscription_attribute_values WHERE entity_id = :entity_id AND attribute_id = :attribute_id"
-        );
-
-        return $stmt->execute([
-            ':entity_id' => $entityId,
-            ':attribute_id' => $attributeId,
-        ]);
-    }
-
-    /**
-     * Delete entity
-     */
-    public function delete(int $entityId): bool {
-        $stmt = $this->db->prepare("DELETE FROM subscription_entities WHERE entity_id = :id");
-        return $stmt->execute([':id' => $entityId]);
+        array_unshift($refs, $types);
+        call_user_func_array([$stmt, 'bind_param'], $refs);
     }
 }

@@ -1,16 +1,15 @@
 <?php
-require_once __DIR__ . '/../autoload.php';
+require __DIR__ . "/../../config/db.php";
+require __DIR__ . "/../controllers/SubscriptionController.php";
+require __DIR__ . "/../controllers/SubscriptionEntityController.php";
 
-use App\Db\Database;
-use App\Controllers\SubscriptionController;
-
-try {
-    $db = Database::connect();
-} catch (Exception $e) {
-    die('DB connection error: ' . $e->getMessage());
+$conn = getDatabaseConnection();
+if (!$conn) {
+    die('DB connection error: mysqli connection not available.');
 }
 
-$ctrl = new SubscriptionController($db);
+$subscriptionController = new App\Controllers\SubscriptionController($conn);
+$entityController = new App\Controllers\SubscriptionEntityController($conn);
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($id <= 0) {
@@ -19,14 +18,14 @@ if ($id <= 0) {
     exit;
 }
 
-$subscription = $ctrl->getById($id);
+$subscription = $subscriptionController->getById($id);
 if (!$subscription) {
     http_response_code(404);
     echo 'Subscription not found';
     exit;
 }
 
-$entities = $ctrl->getEntities($id);
+$entities = $entityController->getBySubscriptionId($id);
 ?>
 <!doctype html>
 <html lang="en">

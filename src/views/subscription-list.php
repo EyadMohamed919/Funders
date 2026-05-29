@@ -1,32 +1,20 @@
 <?php
-// Use project autoloader so we don't depend on Composer's autoload
-require_once __DIR__ . '/../autoload.php';
+require __DIR__ . "/../../config/db.php";
+require __DIR__ . "/../controllers/SubscriptionController.php";
 
-use App\Db\Database;
-use App\Controllers\SubscriptionController;
-
-// Connect to DB
-try {
-    $db = Database::connect();
-} catch (Exception $e) {
-    die('DB connection error: ' . $e->getMessage());
+$conn = getDatabaseConnection();
+if (!$conn) {
+    die('DB connection error: mysqli connection not available.');
 }
 
-$ctrl = new SubscriptionController($db);
+$subscriptionController = new App\Controllers\SubscriptionController($conn);
 
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $search = $_GET['search'] ?? null;
 $status = $_GET['status'] ?? null;
 
-if (!empty($search)) {
-    $subscriptions = $ctrl->search($search, 50);
-} elseif (!empty($status)) {
-    $subscriptions = $ctrl->getByStatus($status, 50);
-} else {
-    $subscriptions = $ctrl->getAll($page, 20);
-}
-
-$totalCount = $ctrl->getCount();
+$subscriptions = $subscriptionController->getAll($page, 20, $search, $status);
+$totalCount = $subscriptionController->getCount($search, $status);
 $totalPages = max(1, (int) ceil($totalCount / 20));
 ?>
 <!doctype html>
