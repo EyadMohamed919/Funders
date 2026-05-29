@@ -158,7 +158,8 @@ class UserController{
 		}
 		if(!isset($_SESSION["UserID"]))
 		{
-			echo "User not logged in";
+			header("Location: /LoginPage.php?status=error&msg=" . urlencode("Please login first"));
+			exit;
 			return;
 		}
 		$userModel = new UserModel();
@@ -194,7 +195,8 @@ class UserController{
 
 		if($attributeName == "")
 		{
-			echo "attribute_name is required";
+			header("Location: /ProfilePage.php?status=error&msg=" . urlencode("attribute_name is required"));
+			exit;
 			return;
 		}
 
@@ -203,11 +205,13 @@ class UserController{
 
 		if($ok)
 		{
-			echo "Attribute saved";
+			header("Location: /ProfilePage.php?status=success&msg=" . urlencode("Attribute saved"));
+			exit;
 		}
 		else
 		{
-			echo "Failed to save attribute";
+			header("Location: /ProfilePage.php?status=error&msg=" . urlencode("Failed to save attribute. Use: national_id, bank_account, is_anonymous"));
+			exit;
 		}
 	}
 
@@ -224,13 +228,15 @@ class UserController{
 
 		if(!isset($_SESSION["UserID"]))
 		{
-			echo "User not logged in";
+			header("Location: /LoginPage.php?status=error&msg=" . urlencode("Please login first"));
+			exit;
 			return;
 		}
 
 		if(!isset($_SESSION["CanCreatePost"]) || !$_SESSION["CanCreatePost"])
 		{
-			echo "Permission denied";
+			header("Location: /ProfilePage.php?status=error&msg=" . urlencode("Only donee accounts can request verification"));
+			exit;
 			return;
 		}
 
@@ -242,11 +248,13 @@ class UserController{
 
 		if($ok)
 		{
-			echo "Verification request submitted";
+			header("Location: /ProfilePage.php?status=success&msg=" . urlencode("Verification request submitted"));
+			exit;
 		}
 		else
 		{
-			echo "Failed to submit verification request";
+			header("Location: /ProfilePage.php?status=error&msg=" . urlencode("Failed to submit verification request"));
+			exit;
 		}
 	}
 
@@ -258,13 +266,15 @@ class UserController{
 
 		if(!isset($_SESSION["UserID"]))
 		{
-			echo "User not logged in";
+			header("Location: /LoginPage.php?status=error&msg=" . urlencode("Please login first"));
+			exit;
 			return;
 		}
 
 		if(!isset($_SESSION["CanApproveVerification"]) || !$_SESSION["CanApproveVerification"])
 		{
-			echo "Permission denied";
+			header("Location: /ProfilePage.php?status=error&msg=" . urlencode("Permission denied"));
+			exit;
 			return;
 		}
 
@@ -287,13 +297,15 @@ class UserController{
 
 		if(!isset($_SESSION["UserID"]))
 		{
-			echo "User not logged in";
+			header("Location: /LoginPage.php?status=error&msg=" . urlencode("Please login first"));
+			exit;
 			return;
 		}
 
 		if(!isset($_SESSION["CanApproveVerification"]) || !$_SESSION["CanApproveVerification"])
 		{
-			echo "Permission denied";
+			header("Location: /ProfilePage.php?status=error&msg=" . urlencode("Permission denied"));
+			exit;
 			return;
 		}
 
@@ -303,7 +315,8 @@ class UserController{
 
 		if($verificationID <= 0 || ($status != "approved" && $status != "rejected"))
 		{
-			echo "Invalid review data";
+			header("Location: /AdminVerificationPage.php?status=error&msg=" . urlencode("Invalid review data"));
+			exit;
 			return;
 		}
 
@@ -312,11 +325,13 @@ class UserController{
 
 		if($ok)
 		{
-			echo "Verification reviewed";
+			header("Location: /AdminVerificationPage.php?status=success&msg=" . urlencode("Verification reviewed"));
+			exit;
 		}
 		else
 		{
-			echo "Failed to review verification";
+			header("Location: /AdminVerificationPage.php?status=error&msg=" . urlencode("Failed to review verification"));
+			exit;
 		}
 	}
 

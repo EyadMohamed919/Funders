@@ -3,11 +3,23 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if(!isset($_SESSION["UserID"]))
-{
-    header("Location: /LoginPage.php");
+if (!isset($_SESSION['UserID'])) {
+    header('Location: /LoginPage.php');
     exit;
 }
+
+require_once __DIR__ . '/src/models/User/UserModel.php';
+
+$userModel = new UserModel();
+$profile = $userModel->getUserWithRolesAndAttributes($_SESSION['UserID']);
+$status = isset($_GET['status']) ? $_GET['status'] : '';
+$msg = isset($_GET['msg']) ? $_GET['msg'] : '';
+$roles = $profile['roles'] ?? [];
+$attributes = $profile['attributes'] ?? [];
+$contacts = $profile['contacts'] ?? [];
+$canDonate = isset($_SESSION['CanDonate']) && $_SESSION['CanDonate'];
+$canCreatePost = isset($_SESSION['CanCreatePost']) && $_SESSION['CanCreatePost'];
+$canApproveVerification = isset($_SESSION['CanApproveVerification']) && $_SESSION['CanApproveVerification'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,138 +32,158 @@ if(!isset($_SESSION["UserID"]))
 <body>
     <nav class="navbar">
         <a href="/index.php">Home</a>
-        <a href="/RegisterPage.php">Register</a>
-        <a href="/LoginPage.php">Login</a>
         <a href="/ProfilePage.php">Profile</a>
-        <a href="/AdminVerificationPage.php">Admin Verification</a>
+        <?php if ($canApproveVerification): ?>
+            <a href="/AdminVerificationPage.php">Admin Verification</a>
+        <?php endif; ?>
         <a href="/DonationTypePage.php">Donation Type</a>
         <a href="/PaymentPage.php">Payment</a>
         <a href="/Invoice.php">Invoice</a>
-
         <form class="logout-form" method="POST" action="/src/routers/UserRouter.php">
             <button class="logout-btn" type="submit" name="logoutUser" value="1">Logout</button>
         </form>
     </nav>
 
     <div class="container">
-        <div class="card">
-            <h2>My Profile</h2>
-            <button class="secondary" id="refreshProfileBtn" type="button">Refresh Profile</button>
-            <div id="profileMsg"></div>
-            <div id="profileContent" style="margin-top: 12px;"></div>
+        <div class="hero-mini card">
+            <div>
+                <h1>My Dashboard</h1>
+                <p class="muted">Your account data, attributes, and verification tools are here.</p>
+            </div>
+            <div class="actions-row">
+                <a class="secondary-link" href="/ProfilePage.php">Refresh Profile</a>
+                <a class="secondary-link" href="/index.php">Home</a>
+            </div>
         </div>
 
-        <div class="card">
-            <h3>Update My Attribute (EAV)</h3>
-            <form id="attrForm" method="POST" action="/src/routers/UserRouter.php">
-                <div class="form-grid">
-                    <div class="field">
-                        <label>Attribute Name</label>
-                        <input type="text" name="attribute_name" placeholder="example: national_id" required>
-                    </div>
-                    <div class="field">
-                        <label>Value</label>
-                        <input type="text" name="value_text" required>
-                    </div>
+        <?php if ($msg !== ''): ?>
+            <div class="message <?php echo $status === 'error' ? 'error' : ''; ?>"><?php echo htmlspecialchars($msg); ?></div>
+        <?php endif; ?>
+
+        <div class="split-grid">
+            <div class="card panel">
+                <h2>Account Summary</h2>
+                <div class="kv"><strong>User ID</strong><span><?php echo htmlspecialchars($profile['user_id'] ?? ''); ?></span></div>
+                <div class="kv"><strong>Full Name</strong><span><?php echo htmlspecialchars($profile['full_name'] ?? ''); ?></span></div>
+                <div class="kv"><strong>Email / Phone</strong><span>
+                    <?php if (count($contacts) > 0): ?>
+                        <?php echo htmlspecialchars($contacts[0]['contact_value']); ?>
+                    <?php else: ?>
+                        N/A
+                    <?php endif; ?>
+                </span></div>
+                <div class="kv"><strong>Logged Role</strong><span><?php echo htmlspecialchars($_SESSION['UserRole'] ?? ''); ?></span></div>
+                <div class="chips">
+                    <span class="chip <?php echo $canDonate ? 'ok' : ''; ?>">Donate: <?php echo $canDonate ? 'Yes' : 'No'; ?></span>
+                    <span class="chip <?php echo $canCreatePost ? 'ok' : ''; ?>">Donee Tools: <?php echo $canCreatePost ? 'Yes' : 'No'; ?></span>
+                    <span class="chip <?php echo $canApproveVerification ? 'ok' : ''; ?>">Admin Review: <?php echo $canApproveVerification ? 'Yes' : 'No'; ?></span>
                 </div>
-                <button type="submit" name="updateMyAttribute" value="1">Save Attribute</button>
-            </form>
-            <div id="attrMsg"></div>
+            </div>
+
+            <div class="card panel">
+                <h2>Contacts</h2>
+                <?php if (count($contacts) > 0): ?>
+                    <table class="table">
+                        <thead>
+                            <tr><th>Type</th><th>Value</th><th>Primary</th><th>Verified</th></tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contacts as $contact): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($contact['contact_type']); ?></td>
+                                    <td><?php echo htmlspecialchars($contact['contact_value']); ?></td>
+                                    <td><?php echo !empty($contact['is_primary']) ? 'Yes' : 'No'; ?></td>
+                                    <td><?php echo !empty($contact['is_verified']) ? 'Yes' : 'No'; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="empty-state">No contacts found.</div>
+                <?php endif; ?>
+            </div>
         </div>
 
-        <div class="card">
-            <h3>Request Verification</h3>
-            <form id="verificationForm" method="POST" action="/src/routers/UserRouter.php">
-                <div class="form-grid">
-                    <div class="field">
-                        <label>Method</label>
-                        <input type="text" name="method" value="document" required>
+        <div class="split-grid">
+            <div class="card panel">
+                <h2>EAV Attributes</h2>
+                <?php if (count($attributes) > 0): ?>
+                    <table class="table">
+                        <thead>
+                            <tr><th>Name</th><th>Value</th><th>Type</th></tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($attributes as $attribute): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($attribute['attribute_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($attribute['value_text']); ?></td>
+                                    <td><?php echo htmlspecialchars($attribute['data_type']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="empty-state">No attributes saved yet.</div>
+                <?php endif; ?>
+            </div>
+
+            <div class="card panel">
+                <h2>Update Attribute</h2>
+                <p class="muted">Use the known attribute names below.</p>
+                <form method="POST" action="/src/routers/UserRouter.php">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Attribute Name</label>
+                            <select name="attribute_name" required>
+                                <option value="national_id">national_id</option>
+                                <option value="bank_account">bank_account</option>
+                                <option value="is_anonymous">is_anonymous</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Value</label>
+                            <input type="text" name="value_text" required>
+                        </div>
                     </div>
-                    <div class="field">
-                        <label>Note</label>
-                        <input type="text" name="note">
+                    <button type="submit" name="updateMyAttribute" value="1">Save Attribute</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="split-grid">
+            <div class="card panel">
+                <h2>Verification Request</h2>
+                <p class="muted">Only donee accounts can submit verification requests.</p>
+                <form method="POST" action="/src/routers/UserRouter.php">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Method</label>
+                            <input type="text" name="method" value="document" required>
+                        </div>
+                        <div class="field">
+                            <label>Note</label>
+                            <input type="text" name="note">
+                        </div>
                     </div>
+                    <button type="submit" name="requestVerification" value="1">Submit Verification Request</button>
+                </form>
+            </div>
+
+            <div class="card panel">
+                <h2>Your Role Tools</h2>
+                <div class="stacked-links">
+                    <?php if ($canDonate): ?>
+                        <a class="secondary-link" href="/DonationTypePage.php">Go to Donation Flow</a>
+                    <?php endif; ?>
+                    <?php if ($canApproveVerification): ?>
+                        <a class="secondary-link" href="/AdminVerificationPage.php">Open Admin Verification</a>
+                    <?php endif; ?>
+                    <?php if ($canCreatePost): ?>
+                        <div class="empty-state">Donee tools are available for your role.</div>
+                    <?php endif; ?>
                 </div>
-                <button type="submit" name="requestVerification" value="1">Submit Verification Request</button>
-            </form>
-            <div id="verifyMsg"></div>
+            </div>
         </div>
     </div>
-
-    <script>
-        const profileMsg = document.getElementById('profileMsg');
-        const profileContent = document.getElementById('profileContent');
-        const refreshProfileBtn = document.getElementById('refreshProfileBtn');
-        const attrForm = document.getElementById('attrForm');
-        const attrMsg = document.getElementById('attrMsg');
-        const verificationForm = document.getElementById('verificationForm');
-        const verifyMsg = document.getElementById('verifyMsg');
-
-        async function loadProfile() {
-            const response = await fetch('/src/routers/UserRouter.php?action=my_profile');
-            const text = await response.text();
-
-            try {
-                const data = JSON.parse(text);
-                profileMsg.className = 'message';
-                profileMsg.textContent = 'Profile loaded';
-
-                const contactsRows = (data.contacts || []).map(c => `<tr><td>${c.contact_type}</td><td>${c.contact_value}</td><td>${c.is_primary}</td><td>${c.is_verified}</td></tr>`).join('');
-                const rolesRows = (data.roles || []).map(r => `<tr><td>${r.role_id}</td><td>${r.role_name}</td></tr>`).join('');
-                const attrRows = (data.attributes || []).map(a => `<tr><td>${a.attribute_name}</td><td>${a.value_text}</td><td>${a.data_type}</td></tr>`).join('');
-
-                profileContent.innerHTML = `
-                    <div class="kv"><strong>User ID</strong><span>${data.user_id}</span></div>
-                    <div class="kv"><strong>Full Name</strong><span>${data.full_name}</span></div>
-                    <div class="kv"><strong>Created At</strong><span>${data.created_at}</span></div>
-
-                    <h3>Contacts</h3>
-                    <table class="table">
-                        <thead><tr><th>Type</th><th>Value</th><th>Primary</th><th>Verified</th></tr></thead>
-                        <tbody>${contactsRows || '<tr><td colspan="4">No contacts</td></tr>'}</tbody>
-                    </table>
-
-                    <h3>Roles</h3>
-                    <table class="table">
-                        <thead><tr><th>ID</th><th>Role</th></tr></thead>
-                        <tbody>${rolesRows || '<tr><td colspan="2">No roles</td></tr>'}</tbody>
-                    </table>
-
-                    <h3>Attributes</h3>
-                    <table class="table">
-                        <thead><tr><th>Name</th><th>Value</th><th>Type</th></tr></thead>
-                        <tbody>${attrRows || '<tr><td colspan="3">No attributes</td></tr>'}</tbody>
-                    </table>
-                `;
-            } catch (e) {
-                profileMsg.className = 'message error';
-                profileMsg.textContent = text || 'Failed to load profile';
-                profileContent.innerHTML = '';
-            }
-        }
-
-        refreshProfileBtn.addEventListener('click', loadProfile);
-
-        attrForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const formData = new FormData(attrForm);
-            const response = await fetch('/src/routers/UserRouter.php', { method: 'POST', body: formData });
-            const text = await response.text();
-            attrMsg.className = text.toLowerCase().includes('failed') ? 'message error' : 'message';
-            attrMsg.textContent = text;
-            loadProfile();
-        });
-
-        verificationForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const formData = new FormData(verificationForm);
-            const response = await fetch('/src/routers/UserRouter.php', { method: 'POST', body: formData });
-            const text = await response.text();
-            verifyMsg.className = text.toLowerCase().includes('failed') || text.toLowerCase().includes('denied') ? 'message error' : 'message';
-            verifyMsg.textContent = text;
-        });
-
-        loadProfile();
-    </script>
 </body>
 </html>

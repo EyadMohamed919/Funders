@@ -3,14 +3,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if(isset($_SESSION["UserID"]))
-{
-    header("Location: /ProfilePage.php");
+if (isset($_SESSION['UserID'])) {
+    header('Location: /ProfilePage.php');
     exit;
 }
 
-$status = isset($_GET["status"]) ? $_GET["status"] : "";
-$msg = isset($_GET["msg"]) ? $_GET["msg"] : "";
+$status = isset($_GET['status']) ? $_GET['status'] : '';
+$msg = isset($_GET['msg']) ? $_GET['msg'] : '';
+$isLoggedIn = false;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,9 +31,16 @@ $msg = isset($_GET["msg"]) ? $_GET["msg"] : "";
     </nav>
 
     <div class="container">
-        <div class="card">
-            <h2>Create Account</h2>
-            <form id="registerForm" method="POST" action="/src/routers/UserRouter.php">
+        <div class="card panel">
+            <div class="page-header">
+                <div>
+                    <h1>Create Account</h1>
+                    <p class="muted">Simple signup for donors, donees, and admins.</p>
+                </div>
+                <a class="ghost-link" href="/LoginPage.php">Already have an account?</a>
+            </div>
+
+            <form method="POST" action="/src/routers/UserRouter.php">
                 <div class="form-grid">
                     <div class="field">
                         <label>Full Name</label>
@@ -43,10 +50,9 @@ $msg = isset($_GET["msg"]) ? $_GET["msg"] : "";
                         <label>Password</label>
                         <input type="password" name="password" required>
                     </div>
-
                     <div class="field">
                         <label>Contact Type</label>
-                        <select name="contact_type" id="contactType" required>
+                        <select name="contact_type" required>
                             <option value="email">email</option>
                             <option value="phone">phone</option>
                         </select>
@@ -55,7 +61,6 @@ $msg = isset($_GET["msg"]) ? $_GET["msg"] : "";
                         <label>Contact Value</label>
                         <input type="text" name="contact_value" required>
                     </div>
-
                     <div class="field">
                         <label>Role</label>
                         <select name="role" id="roleSelect" required>
@@ -66,21 +71,21 @@ $msg = isset($_GET["msg"]) ? $_GET["msg"] : "";
                     </div>
                 </div>
 
-                <div id="donorFields" class="card" style="margin-top: 10px;">
+                <div id="donorFields" class="subpanel">
                     <h3>Donor Fields</h3>
                     <div class="form-grid">
                         <div class="field">
-                            <label>is_anonymous (0 or 1)</label>
+                            <label>is_anonymous</label>
                             <input type="number" name="is_anonymous" min="0" max="1" value="0">
                         </div>
                         <div class="field">
-                            <label>is_laundering_flag (0 or 1)</label>
+                            <label>is_laundering_flag</label>
                             <input type="number" name="is_laundering_flag" min="0" max="1" value="0">
                         </div>
                     </div>
                 </div>
 
-                <div id="doneeFields" class="card" style="display:none; margin-top: 10px;">
+                <div id="doneeFields" class="subpanel" style="display:none;">
                     <h3>Donee Fields</h3>
                     <div class="form-grid">
                         <div class="field">
@@ -94,11 +99,14 @@ $msg = isset($_GET["msg"]) ? $_GET["msg"] : "";
                     </div>
                 </div>
 
-                <button type="submit" name="registerUser" value="1">Register</button>
+                <div class="actions-row">
+                    <button type="submit" name="registerUser" value="1">Register</button>
+                    <a class="secondary-link" href="/LoginPage.php">Go to Login</a>
+                </div>
             </form>
 
-            <?php if($msg != ""): ?>
-                <div class="message <?php echo $status == 'error' ? 'error' : ''; ?>"><?php echo htmlspecialchars($msg); ?></div>
+            <?php if ($msg !== ''): ?>
+                <div class="message <?php echo $status === 'error' ? 'error' : ''; ?>"><?php echo htmlspecialchars($msg); ?></div>
             <?php endif; ?>
         </div>
     </div>

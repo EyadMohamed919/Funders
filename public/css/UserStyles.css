@@ -40,6 +40,117 @@ body {
     padding: 0 12px;
 }
 
+.panel {
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.hero-mini {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.muted {
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.actions-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.secondary-link {
+    display: inline-block;
+    text-decoration: none;
+    background: #334155;
+    color: #fff;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.ghost-link {
+    text-decoration: none;
+    color: #0f766e;
+    font-weight: 600;
+}
+
+.split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.subpanel {
+    background: #f8fafc;
+    border: 1px solid #d7dfe6;
+    border-radius: 12px;
+    padding: 14px;
+    margin: 14px 0;
+}
+
+.chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.chip {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    color: #0f172a;
+    font-size: 13px;
+}
+
+.chip.ok {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.empty-state {
+    padding: 12px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    color: #64748b;
+    background: #f8fafc;
+}
+
+.stacked-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inline-form {
+    display: grid;
+    gap: 8px;
+}
+
+@media (max-width: 720px) {
+    .split-grid,
+    .hero-mini,
+    .page-header {
+        grid-template-columns: 1fr;
+        display: grid;
+    }
+}
+
 .card {
     background: #ffffff;
     border: 1px solid #d7dfe6;

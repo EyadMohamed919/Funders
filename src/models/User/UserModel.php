@@ -248,12 +248,12 @@ class UserModel{
 
         if($note === null)
         {
-            $sql = $this->conn->query("UPDATE user_verification_requests SET request_status = '$status', reviewed_by = $reviewedBy, reviewed_at = NOW() WHERE verification_request_id = $verificationID");
+            $sql = $this->conn->query("UPDATE user_verification_requests SET status = '$status', reviewed_by = $reviewedBy, reviewed_at = NOW() WHERE verification_id = $verificationID");
         }
         else
         {
             $note = $this->conn->real_escape_string($note);
-            $sql = $this->conn->query("UPDATE user_verification_requests SET request_status = '$status', reviewed_by = $reviewedBy, reviewed_at = NOW(), rejection_reason = '$note' WHERE verification_request_id = $verificationID");
+            $sql = $this->conn->query("UPDATE user_verification_requests SET status = '$status', reviewed_by = $reviewedBy, reviewed_at = NOW(), note = '$note' WHERE verification_id = $verificationID");
         }
 
         return $sql ? true : false;
