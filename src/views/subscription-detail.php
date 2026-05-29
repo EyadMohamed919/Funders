@@ -1,5 +1,4 @@
 <?php
-// Use project lightweight autoloader so we don't depend on Composer's autoload
 require_once __DIR__ . '/../autoload.php';
 
 use App\Db\Database;
