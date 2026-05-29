@@ -64,26 +64,16 @@ $isAdmin = isset($_SESSION["CanApproveVerification"]) && $_SESSION["CanApproveVe
         </section>
 
         <div class="post-grid">
-            <!-- <div class="post-card">
-                <div class="image-container">
-                    <img src="https://picsum.photos/400/250?random=1" alt="Post Image">
-                    <span class="category-badge">Medical</span>
+        <?php if (empty($posts)): ?>
+        <p>No posts yet.</p>
+        <?php else: ?>
+            <?php foreach ($posts as $post): ?>
+                <div class="post-card">
+                    <?= $post->displayPost() ?>
                 </div>
-                <div class="card-body">
-                    <h3>Help Leo's Surgery</h3>
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: 65%;"></div>
-                    </div>
-                    <div class="stats-row">
-                        <span><strong>$650</strong> raised</span>
-                        <span>Goal: $1000</span>
-                    </div>
-                    <button class="view-details-btn">View Details</button>
-                </div>
-            </div> -->
-
-            <?php require_once("src/view/posts/postsFeed.php") ?>
-            </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+            
     </main>
 
     <footer class="main-footer">
