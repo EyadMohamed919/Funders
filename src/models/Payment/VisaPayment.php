@@ -7,8 +7,5 @@ class VisaPayment implements PaymentStrategy
         $cardNumber = $data['card_number'];
         $cvv = $data['cvv'];
 
-        echo "Paid $amount using Visa<br>";
-        echo "Card Number: $cardNumber<br>";
-        echo "CVV: $cvv";
     }
 }

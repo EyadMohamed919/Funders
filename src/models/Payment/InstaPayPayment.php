@@ -6,7 +6,5 @@ class InstaPayPayment implements PaymentStrategy
     {
         $instapayAddress = $data['instapay_address'];
 
-        echo "Paid $amount using InstaPay";
-        echo "InstaPay Address: $instapayAddress";
     }
 }

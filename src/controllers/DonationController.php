@@ -1,5 +1,6 @@
 <?php 
 require_once __DIR__ . "/../models/Donation/DonationMoneyStrategy.php";
+require_once __DIR__ . "/../models/Donation/DonationGoodsStrategy.php";
 require_once __DIR__ . "/../models/Donation/DonationTypes.php";
 require_once __DIR__ . "/../models/Donation/DonationModel.php";
 require_once __DIR__ . "/../models/Donation/IDonationStrategy.php";
@@ -28,7 +29,15 @@ class DonationController{
                     $paymentID = $donationData[4];
                     $donationID = $donationData[3];
                     $data = [$paymentID, $donationID];
-
+                    break;
+                
+                case 3:
+                    $donation = new DonationGoodsStrategy();
+                    $donationID = $donationData[3];
+                    $weight = $donationData[4];
+                    $goodsName = $donationData[5];
+                    $goodsDetails = $donationData[6];
+                    $data = [$donationID, $weight, $goodsName, $goodsDetails];
                     break;
                 
                 default:
@@ -36,7 +45,7 @@ class DonationController{
             }
 
             $donation->processDonation($data);
-            header("Location: ../../index.php");
+            header("Location: ../../Invoice.php?donationID=".$donationID);
         }
         else
         {

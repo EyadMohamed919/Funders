@@ -12,42 +12,56 @@
 <div class="payment-container">
     <form method="POST" action="/src/routers/PaymentRouter.php">
 
-        <input type="number" name="amount" placeholder="Enter amount" min="1" required>
+    <label>Amount</label>
+    <input type="number" step="0.01" name="amount" placeholder="Enter amount" min="1" required>
 
-        <select name="payment_method" id="payment_method" required>
-            <option value="visa">Visa</option>
-            <option value="ewallet">E-Wallet</option>
-            <option value="instapay">InstaPay</option>
-        </select>
+    <label>Payment Method</label>
+    <select name="payment_method" id="payment_method" required>
+        <option value="visa">Visa</option>
+        <option value="ewallet">E-Wallet</option>
+        <option value="instapay">InstaPay</option>
+    </select>
 
-        <div id="visa_fields">
-            <input type="text" name="card_number" placeholder="Card Number (16 digits)">
-            <input type="text" name="cvv" placeholder="CVV">
-        </div>
+    <hr class="divider">
 
-        <div id="ewallet_fields" style="display:none;">
-            <input type="text" name="wallet_number" placeholder="Wallet Number">
-        </div>
+    <div id="visa">
+        <label>Card Number</label>
+        <input type="text" name="card_number" placeholder="16-digit card number">
+        <label>CVV</label>
+        <input type="text" name="cvv" placeholder="CVV">
+    </div>
 
-        <div id="instapay_fields" style="display:none;">
-            <input type="text" name="instapay_address" placeholder="InstaPay Address">
-        </div>
+    <div id="ewallet" style="display:none;">
+        <label>Wallet Number</label>
+        <input type="text" name="wallet_number" placeholder="Wallet Number">
+    </div>
 
-        <button type="submit">Pay</button>
+    <div id="instapay" style="display:none;">
+        <label>InstaPay Address</label>
+        <input type="text" name="instapay_address" placeholder="InstaPay Address">
+    </div>
+
+    <button type="submit">Pay Now</button>
 
     </form>
 </div>
 
 <script>
     const select = document.getElementById('payment_method');
-    const allFields = ['visa_fields', 'ewallet_fields', 'instapay_fields'];
+    const allFields = ['visa', 'ewallet', 'instapay'];
+
+    // hide all except visa on page load
+    document.getElementById('visa').style.display = 'block';
+    document.getElementById('ewallet').style.display = 'none';
+    document.getElementById('instapay').style.display = 'none';
+
 
     select.addEventListener('change', function () {
         allFields.forEach(id => document.getElementById(id).style.display = 'none');
-        // Fixed JavaScript bug: changed 'block' to 'flex' to align with the new CSS layouts
-        document.getElementById(this.value + '_fields').style.display = 'flex'; 
-    });
+        document.getElementById(this.value).style.display = 'block';
+});
 </script>
+
 
 </body>
 </html>

@@ -11,10 +11,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
                 DonationController::addPendingDonation($postID, $donationTypeID);
                 header("Location: ../../PaymentPage.php");
                 break;
+
+            case 3:
+                DonationController::addPendingDonation($postID, $donationTypeID);
+                header("Location: ../../GoodsDonationPage.php");
+                break;
             
             default:
                 break;
         }
+    }
+    else if(isset($_POST["goodsDonation"]))
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $donationData = $_SESSION["DonationData"];
+        array_push($donationData, $_POST["weight"], $_POST["goodsName"], $_POST["goodsDetails"]);
+        $_SESSION["DonationData"] = $donationData;
+        DonationController::createDonation();
     }
 }
 else if($_SERVER["REQUEST_METHOD"] == "GET")
