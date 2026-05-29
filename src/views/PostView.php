@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../controllers/PostController.php";
 class PostView{
     public static function fetchPostTable()
     { ?>
@@ -31,5 +32,35 @@ class PostView{
             </tbody>
         </table>
         <?php
+    }
+
+    public static function fetchAllPosts()
+    {
+        $postController = new PostController();
+        $posts = $postController->showAllPosts();
+        foreach($posts as $post)
+        {
+            echo '
+            <div class="donation-container">
+                <div class="donation-card">
+                    <div class="donation-content">
+                        <h2 class="donation-title">' . $post->getTitle() . '</h2>
+                        <p class="donation-details">' . $post->getDetails() . '</p>
+                        
+                        <div class="progress-container">
+                            <!-- Adjust width % to match the actual progress -->
+                            <div class="progress-bar" style="width: 75%;"></div>
+                        </div>
+                        
+                        <div class="donation-stats">
+                            <div>Raised: <span class="amount-raised">$3,750</span></div>
+                            <div class="goal-amount">Goal: $5,000</div>
+                        </div>
+                    </div>
+                    <a href="DonationTypePage.php?postID=' . $post->getId() . '" class="view-btn">Donate Now</a>
+                </div>
+    
+            </div>';
+        }
     }
 }

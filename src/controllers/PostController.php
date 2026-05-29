@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . "/../model/PostModel.php";
-require_once __DIR__ . "/../model/decorators/UrgentPostDecorator.php";
-require_once __DIR__ . "/../model/decorators/FeaturedPostDecorator.php";
+require_once __DIR__ . "/../models/Post/PostModel.php";
+require_once __DIR__ . "/../models/Post/UrgentPostDecorator.php";
+require_once __DIR__ . "/../models/Post/FeaturedPostDecorator.php";
 
 class PostController {
 
-    public function show(int $id): void {
+    public function show(int $id) {
         $postModel = new PostModel();
         $post = $postModel->getPostById($id);
 
@@ -14,10 +14,10 @@ class PostController {
         }
 
         $post = $this->applyDecorators($post);
-        include __DIR__ . "/../view/posts/single_post.php";
+        return $post;
     }
 
-    public function index(): void {
+    public function showAllPosts() {
         $postModel = new PostModel();
         $rawPosts = $postModel->getAllPosts();
         $posts = [];
@@ -25,7 +25,7 @@ class PostController {
             $posts[] = $this->applyDecorators($post);
         }
 
-        include __DIR__ . "/../view/posts/post_list.php";
+        return $posts;
     }
 
     public function admin(): void {

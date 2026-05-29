@@ -47,7 +47,7 @@ form p {
 
 /* Text and Number Inputs */
 input[type="text"],
-input[type="number"] {
+input[type="number"], input, select, textarea {
     width: 100%;
     padding: 12px 14px;
     border: 1.5px solid #d8e2dc;

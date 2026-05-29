@@ -1,5 +1,6 @@
 <?php 
 require_once __DIR__ . "/src/views/DonationViews.php";
+require_once __DIR__ . "/src/controllers/PostController.php";
 if(isset($_GET["postID"]))
 {
     $postID = $_GET["postID"];
@@ -8,7 +9,8 @@ else
 {
     $postID = 9999; // Da placeholder bas
 }
-
+$postController = new PostController();
+$post = $postController->show($postID);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,9 +27,10 @@ else
     <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80" alt="Reforestation project" class="post-image">
     
     <div class="post-content">
-        <h1 class="post-title">Help Us Plant 10,000 Trees This Month</h1>
+        
+        <h1 class="post-title"><?php echo $post->getTitle(); ?></h1>
         <p class="post-description">
-            Our local ecosystem is under threat, but together we can restore it. Your support directly funds community-led reforestation efforts, tool distribution, and seed irrigation programs. Choose how you want to make an impact below.
+            <?php echo $post->getDetails(); ?>
         </p>
     </div>
 

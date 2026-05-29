@@ -66,7 +66,9 @@ body {
 }
 
 .hero-section {
-    background: linear-gradient(135deg, #0f172a, #1d4ed8);
+    background-image: url("https://wallpapers.com/images/high/funny-cat-gangsters-z948rbddg64j856y.webp");
+    background-position: center;
+    background-size: cover;
     color: #fff;
     padding: 56px 12px;
 }
@@ -111,4 +113,111 @@ body {
     padding: 16px;
     text-align: center;
     color: #4b5563;
+}
+
+.donation-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Mini Divs (Donation Cards) */
+.donation-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(40, 116, 74, 0.05);
+    border: 1px solid #e1e8e4;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.donation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(40, 116, 74, 0.12);
+}
+
+/* Card Content Inner Padding */
+.donation-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Title */
+.donation-title {
+    font-size: 1.25rem;
+    color: #1b4332;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+/* Details / Description */
+.donation-details {
+    font-size: 0.95rem;
+    color: #556b5c;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1; /* Pushes the money stats to the bottom so they align */
+}
+
+/* Progress Bar Container */
+.progress-container {
+    background-color: #e8f0ec;
+    border-radius: 10px;
+    height: 8px;
+    width: 100%;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+/* Actual Progress Fill */
+.progress-bar {
+    background-color: #2a9d8f;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Money / Metrics Styling */
+.donation-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.amount-raised {
+    color: #2a9d8f;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.goal-amount {
+    color: #7a8f81;
+}
+
+/* View Button (Optional but completes the card look) */
+.view-btn {
+    display: block;
+    text-align: center;
+    background-color: #f0f7f4;
+    color: #2a9d8f;
+    padding: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-top: 1px solid #e1e8e4;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.view-btn:hover {
+    background-color: #2a9d8f;
+    color: #ffffff;
 }

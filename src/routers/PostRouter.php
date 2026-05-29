@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../model/PostModel.php";
+require_once __DIR__ . "/../models/Post/PostModel.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -8,9 +8,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $post = new PostModel();
         $post->title = $_POST["title"];
         $post->categoryId = $_POST["category_id"];
-        $post->doneeId = $_POST["donee_id"];
-        $post->featured = $_POST["feature"];
-        $post->urgent = $_POST["urgent"];
+        $post->user_id = (int) $_POST["donee_id"];
+        if(!isset($_POST["featured"]))
+        {
+            $post->featured = false;
+        }
+        else
+        {
+            $post->featured = $_POST["featured"];
+        }
+
+        if(!isset($_POST["urgent"]))
+        {
+            $post->featured = false;
+        }
+        else
+        {
+            $post->featured = $_POST["urgent"];
+        }
+        $post->details = $_POST["postDetails"];
     
         if ($post->createPost()) {
             header("Location: ../../index.php");
@@ -25,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $post->id = $_POST["post_id"];
         $post->title = $_POST["title"];
         $post->categoryId = $_POST["category_id"];
-        $post->doneeId = $_POST["donee_id"];
+        $post->user_id = $_POST["donee_id"];
         $post->featured = $_POST["feature"];
         $post->urgent = $_POST["urgent"];
     

@@ -64,16 +64,10 @@ $isAdmin = isset($_SESSION["CanApproveVerification"]) && $_SESSION["CanApproveVe
         </section>
 
         <div class="post-grid">
-        <?php if (empty($posts)): ?>
-        <p>No posts yet.</p>
-        <?php else: ?>
-            <?php foreach ($posts as $post): ?>
-                <div class="post-card">
-                    <?= $post->displayPost() ?>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-            
+        <?php 
+        require_once __DIR__ . "/src/views/PostView.php";
+        PostView::fetchAllPosts();
+        ?>
     </main>
 
     <footer class="main-footer">
