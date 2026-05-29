@@ -33,6 +33,7 @@ $msg = isset($_GET['msg']) ? $_GET['msg'] : '';
         <a href="/index.php">Home</a>
         <a href="/ProfilePage.php">Profile</a>
         <a href="/AdminVerificationPage.php">Admin Verification</a>
+        <a href="/UserManagementPage.php">User Management</a>
         <a href="/DonationTypePage.php">Donation Type</a>
         <a href="/PaymentPage.php">Payment</a>
         <a href="/Invoice.php">Invoice</a>
