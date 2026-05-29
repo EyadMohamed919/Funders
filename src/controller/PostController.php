@@ -28,6 +28,12 @@ class PostController {
         include __DIR__ . "/../view/posts/post_list.php";
     }
 
+    public function admin(): void {
+        $postModel = new PostModel();
+        $posts = $postModel->getAllPosts();  // raw PostModel objects
+        include __DIR__ . "/../view/posts/post_table.php";
+    }
+
     private function applyDecorators(PostModel $post): IPost {
     
         if ($post->featured) {
