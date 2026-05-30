@@ -44,13 +44,9 @@ class PaymentController
     private function extractAttributes(string $method): array
     {
         return match ($method) {
-            'visa'=> ['card_number' => $_POST['card_number'] ?? '',
-                'cvv'=> $_POST['cvv'] ?? ''
-            ],
-            'ewallet'=> ['wallet_number' => $_POST['wallet_number'] ?? ''
-            ],
-            'instapay' => ['instapay_address' => $_POST['instapay_address'] ?? ''
-            ],
+            'visa'=> ['card_number' => $_POST['card_number'],'cvv'=> $_POST['cvv']],
+            'ewallet'=> ['wallet_number' => $_POST['wallet_number']],
+            'instapay' => ['instapay_address' => $_POST['instapay_address']],
             default => []
         };
     }
