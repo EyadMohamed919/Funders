@@ -4,6 +4,7 @@ require_once __DIR__ . "/../models/Donation/DonationGoodsStrategy.php";
 require_once __DIR__ . "/../models/Donation/DonationTypes.php";
 require_once __DIR__ . "/../models/Donation/DonationModel.php";
 require_once __DIR__ . "/../models/Donation/IDonationStrategy.php";
+require_once __DIR__ . "/../models/Payment/PaymentModel.php";
 class DonationController{
     public static function getAllDonationTypes()
     {
@@ -55,6 +56,23 @@ class DonationController{
         // IDonationStrategy $donation = new DonationModel();
     }
 
+    public static function getTotalAmountOfMoneyRaised($postID)
+    {
+        $donationModel = new DonationModel();
+        $donationsArray = $donationModel->getAllDonationsByPost($postID);
+        foreach($donationsArray as $donation)
+        {
+            $donationID = $donation->getDonationID();
+            $donationModel = new DonationMoneyStrategy();
+            $donationMoneyStrategy =  $donationModel->getDonationByDonationID($donationID);
+            $paymentID = $donationMoneyStrategy->getPaymentID();
+            $paymentModel = new Payment("", 0.0, []);
+            $paymentModel->getAmount()
+
+
+        }
+    }
+
     public static function addPendingDonation($postID, $donationType)
     {
         // This function should be called before going to the Payment/Goods/Service page
@@ -79,6 +97,8 @@ class DonationController{
         }
         
     }
+
+    
 }
 // if (session_status() === PHP_SESSION_NONE) {
 //     session_start();

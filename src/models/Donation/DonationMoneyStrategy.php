@@ -52,4 +52,6 @@ class DonationMoneyStrategy extends DonationModel implements IDonationStrategy{
             return false;
         }
     }
+
+
 }

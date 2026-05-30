@@ -62,4 +62,53 @@ class DonationModel{
             return null;
         }
     }
+
+    public function getDonationByPostID($postID)
+    {
+        $sql = $this->conn->query("SELECT * FROM donation WHERE $postID = " . $postID . " LIMIT 1");
+        if($sql->num_rows > 0)
+        {
+            $row = $sql->fetch_assoc();
+            $this->donationID = $row["donationID"]; 
+            $this->postID = $row["postID"]; 
+            $this->createdAt = $row["createdAt"]; 
+            $this->status = $row["status"]; 
+            $this->userID = $row["userID"]; 
+            $this->type = $row["type"]; 
+            return $this;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public function getAllDonationsByPost($postID)
+    {
+        $donations = [];
+        $sql = $this->conn->query("SELECT * FROM donation WHERE postID = " . $postID);
+        if($sql->num_rows > 0)
+        {
+            
+            while($row = $sql->fetch_assoc())
+            {
+                $donation = new DonationModel();
+                $donation->donationID = $row["donationID"];
+                $donation->postID = $row["postID"]; 
+                $donation->createdAt = $row["createdAt"]; 
+                $donation->status = $row["status"]; 
+                $donation->userID = $row["userID"]; 
+                $donation->type = $row["type"]; 
+
+                array_push($donations, $donation);
+            }
+            
+            return $donations;
+        }
+        else
+        {
+            return [];
+        }
+    }
+
 }
