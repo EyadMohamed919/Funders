@@ -6,6 +6,7 @@ class DonationModel{
     private $createdAt;
     private $status;
     private $type;
+    private $typeName;
     private $userID;
 
     private $conn;
@@ -15,10 +16,12 @@ class DonationModel{
         $this->conn = getDatabaseConnection();
     }
 
+    public function setTypeName($name){ $this->typeName = $name; }
     public function getDonationID(){ return $this->donationID; }
     public function getPostID(){ return $this->postID; }
     public function getCreatedAt(){ return $this->createdAt; }
     public function getStatus(){ return $this->status; }
+    public function getTypeName(){ return $this->typeName; }
     public function getDonationType(){ return $this->type; }
     // public function getDonationDetailsID(){ return $this->detailsID; }
     public function getUserID(){ return $this->userID; }
@@ -26,6 +29,21 @@ class DonationModel{
     public function getConn()
     {
         return $this->conn;
+    }
+
+    public function updateDonationStatus($statusID)
+    {
+        // Status 1 = Pending
+        // Status 2 = Successful
+        $sql = $this->conn->query("UPDATE donation SET status = " . $statusID);
+        if($this->conn->affected_rows > 0)
+        {
+            return $this->conn->insert_id;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public function addDonation($postID, $type, $userID)
@@ -87,6 +105,34 @@ class DonationModel{
     {
         $donations = [];
         $sql = $this->conn->query("SELECT * FROM donation WHERE postID = " . $postID);
+        if($sql->num_rows > 0)
+        {
+            
+            while($row = $sql->fetch_assoc())
+            {
+                $donation = new DonationModel();
+                $donation->donationID = $row["donationID"];
+                $donation->postID = $row["postID"]; 
+                $donation->createdAt = $row["createdAt"]; 
+                $donation->status = $row["status"]; 
+                $donation->userID = $row["userID"]; 
+                $donation->type = $row["type"]; 
+
+                array_push($donations, $donation);
+            }
+            
+            return $donations;
+        }
+        else
+        {
+            return [];
+        }
+    }
+
+    public function getAllDonationByUserID($userID)
+    {
+        $donations = [];
+        $sql = $this->conn->query("SELECT * FROM donation WHERE userID = " . $userID);
         if($sql->num_rows > 0)
         {
             

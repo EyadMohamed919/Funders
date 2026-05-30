@@ -232,6 +232,16 @@ if ($transactionResult) {
             </div>
         </div>
 
+        <div class="split-grid">
+            <div class="card panel" style="grid-column: span 2;">
+                <h2>Donated Type</h2>
+                <?php 
+                require_once __DIR__ . "/src/views/DonationViews.php";
+                DonationViews::fetchMyDonatedTypes($_SESSION["UserID"]);
+                ?>
+            </div>
+        </div>
+
     </div>
 </body>
 </html>

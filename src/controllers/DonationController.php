@@ -55,7 +55,7 @@ class DonationController{
             }
 
             $donation->processDonation($data);
-
+            $donation->updateDonationStatus(2);
             if($donationTypeID == 1)
             {
                 header("Location: ../../Invoice.php?donationID=".$donationID);
@@ -120,6 +120,20 @@ class DonationController{
             echo "Failed to add donation";
         }
         
+    }
+
+    public static function getAllDonationByUserID($userID)
+    {
+        $donationModel = new DonationModel();
+        $donationType = new DonationTypes();
+        $donationsArray = $donationModel->getAllDonationByUserID($userID);
+        // var_dump($donationsArray);
+        foreach($donationsArray as $donation)
+        {
+            $typeName = $donationType->getDonationTypeName($donation->getDonationType());
+            $donation->setTypeName($typeName);
+        }
+        return $donationsArray;
     }
 
     
