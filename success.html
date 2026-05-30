@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4faf6; /* Soft green-tinted off-white background */
+            color: #1b4332;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+        .success-container {
+            background-color: #ffffff;
+            border: 1px solid #d8f3dc;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .icon-container {
+            width: 64px;
+            height: 64px;
+            background-color: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        .icon-container svg {
+            width: 32px;
+            height: 32px;
+            fill: #2e7d32;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2e7d32;
+        }
+        p {
+            font-size: 15px;
+            color: #557a69;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #2e7d32;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 12px 24px;
+            border-radius: 6px;
+            transition: background-color 0.15s ease;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="success-container">
+        <div class="icon-container">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+        </div>
+        <h1>Donated Successfully</h1>
+        <p>Your transaction or update has been processed securely. You can now safely return to the hompage.</p>
+        <a href="index.php" class="btn">Return to Home</a>
+    </div>
+
+</body>
+</html>

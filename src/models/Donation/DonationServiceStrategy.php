@@ -3,8 +3,8 @@ require_once __DIR__ . "/DonationModel.php";
 require_once __DIR__ . "/IDonationStrategy.php";
 class DonationServiceStrategy extends DonationModel implements IDonationStrategy{
     
-    private $serviceName;
-    private $serviceDetails;
+    private $name;
+    private $contact;
     private $conn;
 
     public function getDonationID(){ return parent::getDonationID(); }
@@ -14,8 +14,8 @@ class DonationServiceStrategy extends DonationModel implements IDonationStrategy
     public function getDonationType(){ return parent::getDonationType(); }
     public function getUserID(){ return parent::getUserID(); }
 
-    public function getServiceName(){ return $this->serviceName; }
-    public function getServiceDetails(){ return $this->serviceDetails; }
+    public function getServiceName(){ return $this->name; }
+    public function getContact(){ return $this->contact; }
 
     public function __construct()
     {
@@ -30,8 +30,8 @@ class DonationServiceStrategy extends DonationModel implements IDonationStrategy
         if($sql->num_rows > 0)
         {
             $row = $sql->fetch_assoc();
-            $this->serviceName = $row["serviceName"];
-            $this->serviceDetails = $row["serviceDetails"];
+            $this->name = $row["name"];
+            $this->contact = $row["contact"];
             return $this;
         }
         else
@@ -43,11 +43,11 @@ class DonationServiceStrategy extends DonationModel implements IDonationStrategy
     public function processDonation($data)
     {   
         $donationID = $data[0];
-        $serviceName = $data[1];
-        $serviceDetails = $data[2];
+        $name = $data[1];
+        $contact = $data[2];
 
-        $sql = $this->conn->query("INSERT INTO donation_goods_details(serviceName, donationID, serviceDetails) 
-        VALUES ('$serviceName', $donationID, '$serviceDetails')");
+        $sql = $this->conn->query("INSERT INTO donation_service_details(name, donationID, contact) 
+        VALUES ('$name', $donationID, '$contact')");
         if($this->conn->affected_rows > 0)
         {
             return true;
