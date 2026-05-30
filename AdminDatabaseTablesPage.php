@@ -92,7 +92,7 @@ foreach ($rows as $row) {
         <div class="hero-mini card">
             <div>
                 <h1>Database Tables</h1>
-                <p class="muted">Simple read-only view of user-related database tables.</p>
+                <p class="muted">Simple read-only view of user and payment database tables.</p>
             </div>
             <div class="actions-row">
                 <a class="secondary-link" href="/AdminDatabaseTablesPage.php">Refresh</a>
