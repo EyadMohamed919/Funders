@@ -1,5 +1,9 @@
 <?php
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once __DIR__ . "/../../../config/db.php";
 class Payment
 {
@@ -35,7 +39,12 @@ class Payment
         $method = $this->getPaymentMethod();
         $amount = (float) $this->getAmount();
 
-        $this->db->query("INSERT INTO payments (payment_method, amount) VALUES ('$method', $amount)");
+        if (!isset($_SESSION['UserID'])) {
+            die("You must be logged in to make a payment.");
+        }
+        $userId = (int) $_SESSION['UserID'];
+    
+        $this->db->query("INSERT INTO payments (payment_method, amount, user_id) VALUES ('$method', $amount, $userId)");
 
         $paymentId = $this->db->insert_id;
 
