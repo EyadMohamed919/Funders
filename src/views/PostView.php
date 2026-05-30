@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/../controllers/PostController.php";
+require_once __DIR__ . "/../controllers/DonationController.php";
 class PostView{
     public static function fetchPostTable()
     { ?>
@@ -53,7 +54,7 @@ class PostView{
                         </div>
                         
                         <div class="donation-stats">
-                            <div>Raised: <span class="amount-raised">$3,750</span></div>
+                            <div>Raised: <span class="amount-raised">' . DonationController::getTotalAmountOfMoneyRaised($post->getId()) . '</span></div>
                             <div class="goal-amount">Goal: $5,000</div>
                         </div>
                     </div>

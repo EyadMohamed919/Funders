@@ -1,6 +1,18 @@
 <?php 
 require_once __DIR__ . "/src/views/DonationViews.php";
 require_once __DIR__ . "/src/controllers/PostController.php";
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if(!isset($_SESSION["UserID"]))
+{
+    header("Location: LoginPage.php");
+    exit();
+}
+
+
+
 if(isset($_GET["postID"]))
 {
     $postID = $_GET["postID"];

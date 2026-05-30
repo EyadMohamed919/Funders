@@ -38,8 +38,8 @@ class DonationMoneyStrategy extends DonationModel implements IDonationStrategy{
     }
     public function processDonation($data)
     {   
-        $donationID = $data[0];
-        $paymentID = $data[1];
+        $donationID = $data[1];
+        $paymentID = $data[0];
 
         $sql = $this->conn->query("INSERT INTO donation_money_details(paymentID, donationID) 
         VALUES (" . $paymentID .", " . $donationID . ")");

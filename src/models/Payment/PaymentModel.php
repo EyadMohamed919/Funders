@@ -96,16 +96,11 @@ class Payment
 
     public function getPaymentByPaymentID($paymentID)
     {
-        $sql = $this->db->query("SELECT * FROM payments WHERE id = " . $donationID . " LIMIT 1");
+        $sql = $this->db->query("SELECT * FROM payments WHERE id = " . $paymentID . " LIMIT 1");
         if($sql->num_rows > 0)
         {
             $row = $sql->fetch_assoc();
-            $this->donationID = $donationID;
-            $this->postID = $row["postID"]; 
-            $this->createdAt = $row["createdAt"]; 
-            $this->status = $row["status"]; 
-            $this->userID = $row["userID"]; 
-            $this->type = $row["type"]; 
+            $this->amount = $row["amount"];
             return $this;
         }
         else
