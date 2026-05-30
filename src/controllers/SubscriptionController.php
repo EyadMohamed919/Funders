@@ -3,58 +3,50 @@ namespace App\Controllers;
 
 class SubscriptionController
 {
-    private \mysqli $db;
-
-    public function __construct(\mysqli $db)
-    {
-        $this->db = $db;
-    }
+    public function __construct(private \mysqli $db) {}
 
     public function getAll(int $page = 1, int $limit = 20, ?string $search = null, ?string $status = null): array
     {
         $offset = max(0, ($page - 1) * $limit);
-        $where = [];
-        $types = '';
-        $params = [];
-        $sql = 'SELECT * FROM subscriptions';
+        [$where, $types, $params] = $this->buildFilters($search, $status);
 
-        if ($search !== null && $search !== '') {
-            $where[] = '(gateway_id LIKE ? OR status LIKE ?)';
-            $types .= 'ss';
-            $params[] = '%' . $search . '%';
-            $params[] = '%' . $search . '%';
-        }
+        $sql = 'SELECT * FROM subscriptions'
+            . ($where ? ' WHERE ' . implode(' AND ', $where) : '')
+            . ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
 
-        if ($status !== null && $status !== '') {
-            $where[] = 'status = ?';
-            $types .= 's';
-            $params[] = $status;
-        }
-
-        if ($where) {
-            $sql .= ' WHERE ' . implode(' AND ', $where);
-        }
-
-        $sql .= ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-        $types .= 'ii';
-        $params[] = $limit;
-        $params[] = $offset;
-
-        return $this->runSelect($sql, $types, $params);
+        return $this->runSelect($sql, $types . 'ii', [...$params, $limit, $offset]);
     }
 
     public function getCount(?string $search = null, ?string $status = null): int
     {
+        [$where, $types, $params] = $this->buildFilters($search, $status);
+
+        $sql = 'SELECT COUNT(*) AS cnt FROM subscriptions'
+            . ($where ? ' WHERE ' . implode(' AND ', $where) : '');
+
+        $rows = $this->runSelect($sql, $types, $params);
+        return (int) ($rows[0]['cnt'] ?? 0);
+    }
+
+    public function getById(int $id): ?array
+    {
+        return $this->runSelect(
+            'SELECT * FROM subscriptions WHERE subscription_id = ?', 'i', [$id]
+        )[0] ?? null;
+    }
+
+
+    
+    private function buildFilters(?string $search, ?string $status): array
+    {
         $where = [];
         $types = '';
         $params = [];
-        $sql = 'SELECT COUNT(*) AS cnt FROM subscriptions';
 
         if ($search !== null && $search !== '') {
             $where[] = '(gateway_id LIKE ? OR status LIKE ?)';
             $types .= 'ss';
-            $params[] = '%' . $search . '%';
-            $params[] = '%' . $search . '%';
+            $params = [...$params, '%' . $search . '%', '%' . $search . '%'];
         }
 
         if ($status !== null && $status !== '') {
@@ -63,23 +55,7 @@ class SubscriptionController
             $params[] = $status;
         }
 
-        if ($where) {
-            $sql .= ' WHERE ' . implode(' AND ', $where);
-        }
-
-        $rows = $this->runSelect($sql, $types, $params);
-        return isset($rows[0]['cnt']) ? (int) $rows[0]['cnt'] : 0;
-    }
-
-    public function getById(int $id): ?array
-    {
-        $rows = $this->runSelect(
-            'SELECT * FROM subscriptions WHERE subscription_id = ?',
-            'i',
-            [$id]
-        );
-
-        return $rows[0] ?? null;
+        return [$where, $types, $params];
     }
 
     private function runSelect(string $sql, string $types, array $params): array
@@ -90,39 +66,48 @@ class SubscriptionController
         }
 
         if ($types !== '') {
-            $this->bindParams($stmt, $types, $params);
+            $stmt->bind_param($types, ...$params);
         }
 
-        if (! $stmt->execute()) {
+        if (!$stmt->execute()) {
             throw new \RuntimeException('SQL execute failed: ' . $stmt->error);
         }
 
         $result = $stmt->get_result();
-        $rows = [];
-
-        if ($result !== false) {
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-            $result->free();
-        }
-
+        $rows = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+        $result?->free();
         $stmt->close();
+
         return $rows;
     }
-
-    private function bindParams(\mysqli_stmt $stmt, string $types, array $params): void
-    {
-        if ($params === []) {
-            return;
-        }
-
-        $refs = [];
-        foreach ($params as $key => $value) {
-            $refs[$key] = &$params[$key];
-        }
-
-        array_unshift($refs, $types);
-        call_user_func_array([$stmt, 'bind_param'], $refs);
+    public function create(
+    ?string $frequency,
+    string  $status,
+    string  $startDate,
+    int     $creationDate,
+    int     $nextBillingDate,
+    string  $gatewayId,
+    float   $amount,
+    int     $userId
+): int {
+    $stmt = $this->db->prepare(
+        'INSERT INTO subscriptions
+         (frequency, status, start_date, creation_date, next_billing_date, gateway_id, amount, user_id, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())'
+    );
+    if ($stmt === false) {
+        throw new \RuntimeException('Prepare failed: ' . $this->db->error);
     }
+    $stmt->bind_param('sssiisdi',
+        $frequency, $status, $startDate,
+        $creationDate, $nextBillingDate,
+        $gatewayId, $amount, $userId
+    );
+    if (!$stmt->execute()) {
+        throw new \RuntimeException('Execute failed: ' . $stmt->error);
+    }
+    $id = (int) $this->db->insert_id;
+    $stmt->close();
+    return $id;
+}
 }

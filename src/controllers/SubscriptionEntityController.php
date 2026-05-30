@@ -115,4 +115,85 @@ class SubscriptionEntityController
         array_unshift($refs, $types);
         call_user_func_array([$stmt, 'bind_param'], $refs);
     }
+
+    public function createForSubscription(int $subscriptionId): int
+{
+    $stmt = $this->db->prepare(
+        'INSERT INTO subscription_entities (subscription_id, created_at) VALUES (?, NOW())'
+    );
+    if ($stmt === false) {
+        throw new \RuntimeException('Prepare failed: ' . $this->db->error);
+    }
+    $stmt->bind_param('i', $subscriptionId);
+    if (!$stmt->execute()) {
+        throw new \RuntimeException('Execute failed: ' . $stmt->error);
+    }
+    $id = (int) $this->db->insert_id;
+    $stmt->close();
+    return $id;
+}
+
+public function saveAttributeValue(int $entityId, int $attributeId, string $value): void
+{
+    $stmt = $this->db->prepare(
+        'INSERT INTO subscription_attribute_values (entity_id, attribute_id, value, created_at)
+         VALUES (?, ?, ?, NOW())'
+    );
+    if ($stmt === false) {
+        throw new \RuntimeException('Prepare failed: ' . $this->db->error);
+    }
+    $stmt->bind_param('iis', $entityId, $attributeId, $value);
+    if (!$stmt->execute()) {
+        throw new \RuntimeException('Execute failed: ' . $stmt->error);
+    }
+    $stmt->close();
+}
+
+
+public function getChoicesBySubscriptionIds(array $subscriptionIds): array
+{
+    if (empty($subscriptionIds)) return [];
+
+    $ids = array_map('intval', $subscriptionIds);
+    $ph  = implode(',', array_fill(0, count($ids), '?'));
+
+    // Step 1: subscription_id -> entity_id
+    $entities = $this->runSelect(
+        "SELECT entity_id, subscription_id FROM subscription_entities WHERE subscription_id IN ($ph)",
+        str_repeat('i', count($ids)),
+        $ids
+    );
+    if (empty($entities)) return [];
+
+    $entityToSub = array_column($entities, 'subscription_id', 'entity_id');
+    $entityIds   = array_keys($entityToSub);
+    $eph         = implode(',', array_fill(0, count($entityIds), '?'));
+
+    // Step 2: look up attribute_id for 'choice'
+    $def = $this->runSelect(
+        "SELECT attribute_id FROM attribute_definitions WHERE name = 'choice'",
+        '', []
+    );
+    if (empty($def)) return [];
+    $choiceAttrId = (int) $def[0]['attribute_id'];
+
+    // Step 3: get values
+    $values = $this->runSelect(
+        "SELECT entity_id, value FROM subscription_attribute_values
+         WHERE entity_id IN ($eph) AND attribute_id = ?",
+        str_repeat('i', count($entityIds)) . 'i',
+        [...array_map('intval', $entityIds), $choiceAttrId]
+    );
+
+    // Step 4: map subscription_id -> choice
+    $result = [];
+    foreach ($values as $row) {
+        $subId = $entityToSub[$row['entity_id']] ?? null;
+        if ($subId !== null) {
+            $result[(int)$subId] = $row['value'];
+        }
+    }
+    return $result;
+}
+
 }
