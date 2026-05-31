@@ -1,0 +1,449 @@
+# Software Requirement Specification Document
+
+Project: Funders Platform  
+Version: 1.2  
+Date: 31 May 2026
+
+## 1 Introduction
+
+### 1.1 Purpose of this document
+This document defines the software requirements for Funders, a web platform for local fundraising in Egypt.
+
+Intended audience:
+1. Course instructor and evaluators.
+2. Student development team.
+3. Testers and maintainers.
+
+### 1.2 Scope of this document
+This SRS covers the requirements for user management, post and donation flow, payment, invoice, verification, and admin operations.
+
+Requirements elicitation participants:
+1. Users represented by donor and donee roles.
+2. Customer proxy represented by course project expectations.
+3. System engineers and developers represented by the student team.
+
+Constraints during elicitation:
+1. Limited academic schedule and budget.
+2. Simple, understandable architecture required.
+3. Plain PHP and MySQL environment.
+4. Some modules (subscription) are still under development by a teammate.
+
+### 1.3 Overview
+Funders supports the following:
+1. Donors and donees register and log in.
+2. Donees create fundraising posts.
+3. Donors donate through supported payment methods.
+4. Admins review verification requests.
+5. Admins manage users.
+6. Admins inspect selected database tables, including payment data.
+7. Subscription for donors as an in-progress module.
+
+### 1.4 Business Context
+Mission: enable transparent, local fundraising for social and humanitarian needs.
+
+Organizational goals:
+1. Connect donees and donors in one platform.
+2. Keep donation and payment workflows clear and auditable.
+3. Provide admin control for trust and verification.
+4. Keep system simple enough for student-level maintenance.
+
+## 2 General Description
+
+### 2.1 Product Functions
+Main product functions:
+1. Account registration and login.
+2. Role-based capabilities for donor, donee, and admin.
+3. Profile management with flexible attributes (EAV model).
+4. Post creation and management for donees.
+5. Donation and payment processing for donors.
+6. Invoice generation.
+7. Verification request and review.
+8. Admin user management.
+9. Admin database table viewing.
+10. Donor subscription management (in development).
+
+### 2.2 Similar System Information
+Funders is a standalone web application for this course project. It is not a plugin and not a component inside a larger enterprise system. It may later integrate with external payment services if needed.
+
+### 2.3 User Characteristics
+1. Guest users: basic browsing and account creation.
+2. Donors: basic to moderate technical skills, focused on donation flow.
+3. Donees: basic to moderate technical skills, focused on creating and managing posts.
+4. Admins: moderate technical skills, focused on verification and management pages.
+5. Developers/testers: student-level software engineering knowledge.
+
+### 2.4 User Problem Statement
+Current user community problems:
+1. Difficulty connecting local donees with trustworthy donors.
+2. Limited visibility into verification and trust.
+3. Fragmented donation and payment flow.
+4. Limited admin visibility without dedicated tools.
+
+### 2.5 User Objectives
+User objectives:
+1. Fast registration and login.
+2. Easy post creation for donees.
+3. Clear donation and payment steps for donors.
+4. Reliable verification process.
+5. Clear admin tools for user and data oversight.
+6. Future support for donor subscriptions.
+
+### 2.6 General Constraints
+1. Academic deadlines and limited team capacity.
+2. PHP and MySQL stack.
+3. Simple interface and logic expected by instructor.
+4. Existing team codebase and module boundaries must be respected.
+5. Security and role checks must use session-based access control.
+
+## 3 Functional Requirements
+Requirements are listed in priority order.
+
+### FR-01 User Authentication and Session Control
+1. Description: The system shall allow register, login, logout, and session-based access control for protected pages.
+2. Criticality: High.
+3. Technical issues: Password hashing, role loading, session initialization, and session checks.
+4. Cost and schedule: Low to medium implementation effort.
+5. Risks: Misconfigured session handling may bypass protection.
+6. Dependencies with other requirements: Depends on FR-02 and FR-07.
+
+### FR-02 Role-Based Authorization
+1. Description: The system shall enforce capabilities for donor, donee, and admin actions.
+2. Criticality: High.
+3. Technical issues: Role decorators/capability mapping and guard checks before privileged actions.
+4. Cost and schedule: Medium.
+5. Risks: Incorrect capability mapping can expose admin functions.
+6. Dependencies with other requirements: Depends on FR-01 and user-role data integrity.
+
+### FR-03 Donee Post Management
+1. Description: The system shall allow donees to create and manage fundraising posts.
+2. Criticality: High.
+3. Technical issues: Post table, ownership checks, and category mapping.
+4. Cost and schedule: Medium.
+5. Risks: Incomplete teammate module integration.
+6. Dependencies with other requirements: Depends on FR-01 and FR-02.
+
+### FR-04 Donation and Payment Processing
+1. Description: The system shall allow donors to donate and complete payment through supported methods.
+2. Criticality: High.
+3. Technical issues: Payment strategy handling, payment attribute storage, and donation linkage.
+4. Cost and schedule: Medium.
+5. Risks: Data inconsistency between payment and donation records.
+6. Dependencies with other requirements: Depends on FR-01, FR-02, and FR-03.
+
+### FR-05 Invoice Generation
+1. Description: The system shall produce invoice output for completed donation transactions.
+2. Criticality: Medium to High.
+3. Technical issues: Donation-payment lookup and invoice view formatting.
+4. Cost and schedule: Medium.
+5. Risks: Missing references if transaction flow fails.
+6. Dependencies with other requirements: Depends on FR-04.
+
+### FR-06 Verification Workflow
+1. Description: Donees shall request verification, and admins shall review and approve/reject requests.
+2. Criticality: High.
+3. Technical issues: Request states, reviewer tracking, and audit fields.
+4. Cost and schedule: Medium.
+5. Risks: Wrong status updates or unauthorized review actions.
+6. Dependencies with other requirements: Depends on FR-01 and FR-02.
+
+### FR-07 User Profile and EAV Attributes
+1. Description: The system shall allow users to view profile and update supported attributes using an EAV model.
+2. Criticality: Medium.
+3. Technical issues: Attribute definitions, value validation, and role-specific fields.
+4. Cost and schedule: Medium.
+5. Risks: Invalid attribute names or mismatched types.
+6. Dependencies with other requirements: Depends on FR-01.
+
+### FR-08 Admin User Management
+1. Description: The system shall allow admins to filter users, view details, update selected user data, and delete users safely.
+2. Criticality: High.
+3. Technical issues: Transaction handling, dependency-safe deletion, and self-delete prevention.
+4. Cost and schedule: Medium.
+5. Risks: Foreign key conflicts during delete.
+6. Dependencies with other requirements: Depends on FR-01 and FR-02.
+
+### FR-09 Admin Database Table Viewer
+1. Description: The system shall provide admins read-only views for selected whitelisted tables, including payments and payment_attributes.
+2. Criticality: Medium.
+3. Technical issues: Safe table whitelist and search filtering.
+4. Cost and schedule: Low to medium.
+5. Risks: Exposing unauthorized tables if whitelist validation fails.
+6. Dependencies with other requirements: Depends on FR-01 and FR-02.
+
+### FR-10 Subscription Management for Donors
+1. Description: The system shall support donor subscription management when teammate module is completed.
+2. Criticality: Medium currently, target High after completion.
+3. Technical issues: Pending final data model and business rules.
+4. Cost and schedule: In progress by teammate.
+5. Risks: Integration delay.
+6. Dependencies with other requirements: Depends on FR-02 and FR-04.
+
+## 4 Interface Requirements
+
+### 4.1 User Interfaces
+The product provides web pages for guests, donors, donees, and admins.
+
+#### 4.1.1 GUI
+Main GUI pages:
+1. Home page.
+2. Register page.
+3. Login page.
+4. Profile page.
+5. Donation and payment pages.
+6. Invoice page.
+7. Admin verification page.
+8. User management page.
+9. Admin database tables page (table selector and search filter).
+
+GUI expectations:
+1. Simple and clear navigation.
+2. Session-aware links.
+3. Error and success feedback messages.
+
+#### 4.1.2 CLI
+No user-facing CLI is required for production use. Developer CLI may be used for local setup and debugging.
+
+#### 4.1.3 API
+Internal HTTP form-based endpoints are used through application routers and controllers. Public external API is not required in current scope.
+
+#### 4.1.4 Diagnostics or ROM
+Diagnostics are provided through:
+1. Validation messages in UI.
+2. PHP error logging in development environment.
+3. Database query error feedback during development/testing.
+
+### 4.2 Hardware Interfaces
+No direct hardware interface is required beyond standard server and client hardware.
+
+### 4.3 Communications Interfaces
+The system uses HTTP/HTTPS communication between browser and web server.
+
+### 4.4 Software Interfaces
+1. PHP runtime.
+2. MySQL database.
+3. Optional dotenv configuration loading.
+4. Browser rendering engine for UI.
+
+## 5 Performance Requirements
+1. Standard page response should generally be under 3 seconds in normal local testing.
+2. User management and table viewer pages should handle moderate dataset sizes without timeout.
+3. Search/filter in admin pages should complete quickly for class-project scale data.
+4. Memory usage should remain within typical PHP local server limits.
+
+## 6 Design Constraints
+
+### 6.1 Standards Compliance
+1. Follow course-required documentation and grading expectations.
+2. Follow basic web and SQL best practices.
+3. Use simple MVC-like separation where possible.
+
+### 6.2 Hardware Limitations
+1. Must run on student development machines.
+2. Must run with common local web stack and limited resources.
+
+### 6.3 Others as Appropriate
+1. Team module boundaries must be respected.
+2. Existing schema and foreign keys constrain design changes.
+3. Subscription module schedule depends on teammate delivery.
+
+## 7 Other Non-Functional Attributes
+
+### 7.1 Security
+1. Store passwords hashed.
+2. Enforce session checks on protected routes.
+3. Enforce admin capability checks for admin pages.
+4. Validate and sanitize user input.
+
+### 7.2 Binary Compatibility
+Not applicable for this web application project.
+
+### 7.3 Reliability
+1. Failed operations should provide clear feedback.
+2. Data updates should avoid partial failure when transaction control is required.
+
+### 7.4 Maintainability
+1. Keep modules simple and logically separated.
+2. Keep naming and routing consistent.
+3. Keep admin tools understandable for future student maintainers.
+
+### 7.5 Portability
+System should be portable across common local PHP/MySQL environments.
+
+### 7.6 Extensibility
+EAV design and modular controllers should allow future attributes and features.
+
+### 7.7 Re-usability
+Authentication, role capability logic, and table viewing patterns should be reusable in future modules.
+
+### 7.8 Application Affinity/Compatibility
+Compatible with modern browsers and standard PHP server setup.
+
+### 7.9 Resource Utilization
+Should run efficiently with moderate CPU and RAM usage in development environments.
+
+### 7.10 Serviceability
+Issues should be diagnosable through logs and clear UI error messages.
+
+### 7.11 Others as Appropriate
+1. Readability and simplicity are key project quality criteria.
+2. Avoid over-engineering beyond course scope.
+
+## 8 Preliminary Object-Oriented Domain Analysis
+
+### 8.1 Inheritance Relationships
+Primary inheritance/specialization relationships:
+1. Auth strategy hierarchy:
+IAuthStrategy as interface, with EmailPasswordAuth and PhonePasswordAuth implementations.
+2. Role decorator hierarchy:
+IUserRole as interface, BaseUserRole as concrete base, UserRoleDecorator as wrapper, and DonorRoleDecorator/DoneeRoleDecorator/AdminRoleDecorator as concrete decorators.
+3. Donation strategy hierarchy:
+IDonationStrategy with DonationMoneyStrategy and DonationGoodsStrategy implementations.
+
+Figure 1: Inheritance Relations (textual)
+1. IAuthStrategy -> EmailPasswordAuth, PhonePasswordAuth.
+2. IUserRole -> BaseUserRole -> UserRoleDecorator -> DonorRoleDecorator, DoneeRoleDecorator, AdminRoleDecorator.
+3. IDonationStrategy -> DonationMoneyStrategy, DonationGoodsStrategy.
+
+### 8.2 Class Descriptions
+
+#### 8.2.1 UserModel
+1. Abstract or Concrete: Concrete.
+2. List of Superclasses: None.
+3. List of Subclasses: None.
+4. Purpose: Encapsulates data access for users, contacts, roles, attributes, and verification requests.
+5. Collaborations: UserController and database connection layer.
+6. Attributes: Database connection reference and user identity fields loaded from database.
+7. Operations: Create user, add contact, assign role, save attribute value, fetch profile aggregate, create/review verification requests.
+8. Constraints: Must preserve foreign key consistency and role/attribute validity.
+
+#### 8.2.2 UserController
+1. Abstract or Concrete: Concrete.
+2. List of Superclasses: None.
+3. List of Subclasses: None.
+4. Purpose: Controls registration, login, profile update, verification actions, and session state.
+5. Collaborations: UserModel, auth strategy classes, role decorators.
+6. Attributes: Request/session derived values.
+7. Operations: Register, login, logout, profile retrieval, attribute update, verification request/review.
+8. Constraints: Must validate request method, role permissions, and required inputs.
+
+#### 8.2.3 PaymentController
+1. Abstract or Concrete: Concrete.
+2. List of Superclasses: None.
+3. List of Subclasses: None.
+4. Purpose: Handles payment submission and links payment to donation flow.
+5. Collaborations: Payment model/classes and DonationController.
+6. Attributes: Request payment fields and extracted attributes.
+7. Operations: Store payment and forward to donation completion.
+8. Constraints: Payment must be valid before persistence.
+
+#### 8.2.4 DonationController
+1. Abstract or Concrete: Concrete.
+2. List of Superclasses: None.
+3. List of Subclasses: None.
+4. Purpose: Creates and finalizes donation records.
+5. Collaborations: Donation strategies, donation model, payment flow, invoice flow.
+6. Attributes: Session-based donation context.
+7. Operations: Initialize pending donation, create/finalize donation, list donation types.
+8. Constraints: Donation flow requires valid session donation context.
+
+#### 8.2.5 Admin User Management Page Logic
+1. Abstract or Concrete: Concrete page-level logic.
+2. List of Superclasses: None.
+3. List of Subclasses: None.
+4. Purpose: Provides admin filtering, user details, update, and delete operations.
+5. Collaborations: Database layer and admin session checks.
+6. Attributes: Filter inputs, selected user id, result sets.
+7. Operations: Load users, apply filters, update user fields/role, delete user safely.
+8. Constraints: Admin-only access and self-delete prevention.
+
+#### 8.2.6 Admin Database Tables Page Logic
+1. Abstract or Concrete: Concrete page-level logic.
+2. List of Superclasses: None.
+3. List of Subclasses: None.
+4. Purpose: Provides admin read-only viewing of selected database tables.
+5. Collaborations: Database layer and admin session checks.
+6. Attributes: Selected table name, table whitelist, search query, filtered rows.
+7. Operations: Validate selected table against whitelist, fetch rows, filter rows by query, render table output.
+8. Constraints: Admin-only access and whitelist-restricted table viewing.
+
+## 9 Operational Scenarios
+
+### Scenario 1: Donor Registration and Donation
+1. Guest opens Register page.
+2. Guest registers as Donor.
+3. System logs in donor and opens Profile.
+4. Donor browses causes/posts.
+5. Donor selects donation and payment method.
+6. System saves payment and donation.
+7. System displays invoice.
+
+### Scenario 2: Donee Posting and Verification
+1. Guest registers as Donee.
+2. Donee logs in.
+3. Donee creates a post.
+4. Donee submits verification request.
+5. Admin reviews and approves/rejects.
+6. System updates verification status.
+
+### Scenario 3: Admin User Management
+1. Admin logs in.
+2. Admin opens User Management.
+3. Admin filters users and opens user details.
+4. Admin updates user name/role or deletes selected user.
+5. System confirms action and refreshes list.
+
+### Scenario 4: Admin Data Inspection
+1. Admin opens Database Tables page.
+2. Admin selects payments or payment_attributes table.
+3. Admin searches within rows using the table filter.
+4. System displays filtered read-only results.
+
+### Scenario 5: Subscription Flow (In Progress)
+1. Donor opens subscription section.
+2. Donor initiates plan selection.
+3. Final persistence and lifecycle actions depend on teammate implementation completion.
+
+## 10 Preliminary Schedule Adjusted
+Tentative high-level timeline:
+1. Week 1: Finalize core user module and authentication.
+2. Week 2: Post and donation integration.
+3. Week 3: Payment and invoice stabilization.
+4. Week 4: Admin verification and user management finalization.
+5. Week 5: Database table viewer and testing.
+6. Week 6: Subscription integration, final QA, and documentation freeze.
+
+Key dependency:
+Subscription schedule depends on teammate completion and integration readiness.
+
+## 11 Preliminary Budget Adjusted
+Estimated class-project budget (effort-based):
+1. Development effort: Student team hours (primary cost factor).
+2. Infrastructure: Local development tools and existing hardware (negligible direct monetary cost).
+3. Optional hosting/demo cost: Low, only if external deployment is required.
+4. Testing and bug-fix buffer: Moderate effort allocation near deadline.
+
+## 12 Appendices
+
+### 12.1 Definitions, Acronyms, Abbreviations
+1. SRS: Software Requirements Specification.
+2. EAV: Entity-Attribute-Value.
+3. GUI: Graphical User Interface.
+4. CLI: Command Line Interface.
+5. API: Application Programming Interface.
+6. FR: Functional Requirement.
+7. NFR: Non-Functional Requirement.
+8. Donee: User requesting support through posted causes.
+9. Donor: User providing financial support.
+
+### 12.2 Collected Material
+1. Team codebase modules and controllers.
+2. Course rubric constraints.
+3. Existing pages and admin tools.
+4. Team discussion outcomes for subscription and posts.
+
+## 13 References
+1. Course project guidelines and grading rubric.
+2. Team repository source code and schema.
+3. Standard software requirements writing practices.
+4. Class lectures on OO domain analysis and requirements engineering.
+
