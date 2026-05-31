@@ -12,7 +12,12 @@
         <th>Gateway</th>
         <th>Actions</th>
     </tr>
-    <?php foreach($subscriptions as $sub): ?>
+
+
+    
+    <?php
+    // hena ben loop 3ala el subscriptions w byt7to
+    foreach($subscriptions as $sub): ?>
     <tr>
         <td><?php echo $sub["subscription_id"]; ?></td>
         <td><?php echo $sub["user_id"]; ?></td>
@@ -21,8 +26,8 @@
         <td><?php echo $sub["frequency"]; ?></td>
         <td><?php echo $sub["gateway_id"]; ?></td>
 <td>
-<a href="/router/subscription.php?action=show&id=<?php echo $sub["subscription_id"]; ?>">View</a>
-<a href="/router/subscription.php?action=edit&id=<?php echo $sub["subscription_id"]; ?>">Edit</a>
+    <a href="subscription.php?action=show&id=<?php echo $sub["subscription_id"]; ?>">View</a>
+    <a href="subscription.php?action=edit&id=<?php echo $sub["subscription_id"]; ?>">Edit</a>
 </td>
     </tr>
     <?php endforeach; ?>

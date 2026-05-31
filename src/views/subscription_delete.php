@@ -1,6 +1,4 @@
-<?php
-// Receives: $subscription (array from getSubscriptionByID)
-?>
+
 <h1>Delete Subscription #<?php echo $subscription["subscription_id"]; ?>?</h1>
 
 <table border="1" cellpadding="5" cellspacing="0">
@@ -10,7 +8,7 @@
     <tr><td>Frequency</td><td><?php echo $subscription["frequency"]; ?></td></tr>
 </table>
 
-<br><form method="post" action="/router/subscription.php?action=destroy&id=<?php echo $subscription["subscription_id"]; ?>">
+<br><form method="post" action="/routers/subscription.php?action=destroy&id=<?php echo $subscription["subscription_id"]; ?>">
         <button type="submit" onclick="return confirm('Are you sure? This cannot be undone.')">Yes, Delete</button>
-    <a href="/router/subscription.php?id=<?php echo $subscription["subscription_id"]; ?>">Cancel</a>
+<a href="<?php echo $isEdit ? "subscription.php?action=show&id=" . $subscription["subscription_id"] : "subscriptions.php"; ?>">Cancel</a>
 </form>
