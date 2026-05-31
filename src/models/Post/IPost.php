@@ -9,4 +9,5 @@ interface Ipost {
     public function isFeatured();
     public function isUrgent();
     public function getDetails();
+    public function getTargetAmount();
 }
