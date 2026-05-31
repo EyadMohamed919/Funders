@@ -76,22 +76,25 @@ class DonationController{
     public static function getTotalAmountOfMoneyRaised($postID)
     {
         $totalAmount = 0;
-        $donationModel = new DonationModel();
-        $donationsArray = $donationModel->getAllDonationsByPost($postID);
-        foreach($donationsArray as $donation)
+        if($postID)
         {
-            $donationID = $donation->getDonationID();
-            $donationModel = new DonationMoneyStrategy();
-            $donationMoneyStrategy = $donationModel->getDonationByDonationID($donationID);
-            if($donationMoneyStrategy)
+            $donationModel = new DonationModel();
+            $donationsArray = $donationModel->getAllDonationsByPost($postID);
+            foreach($donationsArray as $donation)
             {
-                $paymentID = $donationMoneyStrategy->getPaymentID();
-                $paymentModel = new Payment("", 0.0, []);
-                $paymentModel->getPaymentByPaymentID($paymentID);
-                $totalAmount += $paymentModel->getAmount();
+                $donationID = $donation->getDonationID();
+                $donationModel = new DonationMoneyStrategy();
+                $donationMoneyStrategy = $donationModel->getDonationByDonationID($donationID);
+                if($donationMoneyStrategy)
+                {
+                    $paymentID = $donationMoneyStrategy->getPaymentID();
+                    $paymentModel = new Payment("", 0.0, []);
+                    $paymentModel->getPaymentByPaymentID($paymentID);
+                    $totalAmount += $paymentModel->getAmount();
+                }
+    
+    
             }
-
-
         }
 
         return $totalAmount;

@@ -25,4 +25,17 @@ class CategoryModel{
             return [];
         }
     }
+
+    public function getCategoryNameByCategoryID($categoryID)
+    {
+        $sql = $this->conn->query("SELECT * FROM category WHERE category_id = " . $categoryID);
+        if($sql->num_rows > 0)
+        {
+            return $sql->fetch_assoc()["category_details"];
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

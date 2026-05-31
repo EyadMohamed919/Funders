@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../controllers/PostController.php";
 require_once __DIR__ . "/../controllers/DonationController.php";
+require_once __DIR__ . "/../controllers/CategoryController.php";
 class PostView{
     public static function fetchPostTable()
     { ?>
@@ -39,29 +40,30 @@ class PostView{
     {
         $postController = new PostController();
         $posts = $postController->showAllPosts();
+        
         foreach($posts as $post)
         {
+            $totalRaised = DonationController::getTotalAmountOfMoneyRaised($post->getId());
             echo '
-            <div class="donation-container">
                 <div class="donation-card">
                     <div class="donation-content">
+                        <p class="donation-category">' . CategoryController::getCategoryName($post->getCategoryId()) . '</p>
                         <h2 class="donation-title">' . $post->getTitle() . '</h2>
                         <p class="donation-details">' . $post->getDetails() . '</p>
                         
                         <div class="progress-container">
-                            <!-- Adjust width % to match the actual progress -->
-                            <div class="progress-bar" style="width: 75%;"></div>
+                            <div class="progress-bar" style="width: ' . ($totalRaised / $post->getTargetAmount()) * 100  . '%;"></div>
                         </div>
                         
                         <div class="donation-stats">
-                            <div>Raised: <span class="amount-raised">' . DonationController::getTotalAmountOfMoneyRaised($post->getId()) . '</span></div>
-                            <div class="goal-amount">Goal: $5,000</div>
+                            <div>Raised: <span class="amount-raised"> جنيه ' . $totalRaised . ' </span></div>
+                            <div class="goal-amount">Goal: جنيه '  . $post->getTargetAmount() . '</div>
                         </div>
                     </div>
                     <a href="DonationTypePage.php?postID=' . $post->getId() . '" class="view-btn">Donate Now</a>
                 </div>
     
-            </div>';
+            ';
         }
     }
 }

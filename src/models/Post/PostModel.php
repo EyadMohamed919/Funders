@@ -91,10 +91,11 @@ class PostModel implements IPost {
         $featuredInt = (int)$this->featured;
         $urgentInt = (int)$this->urgent;
         $details = $this->details;
+        $targetAmount = $this->targetAmount;
         
         $result = $conn->query(
-            "INSERT INTO post (title, category_id, user_id, featured, urgent, details) 
-             VALUES ('$title', {$this->categoryId}, {$this->user_id}, $featuredInt, $urgentInt, '$details')"  
+            "INSERT INTO post (title, category_id, user_id, featured, urgent, details, targetAmount) 
+             VALUES ('$title', {$this->categoryId}, {$this->user_id}, $featuredInt, $urgentInt, '$details', $targetAmount)"  
         );
         return $result != false;
     }

@@ -27,12 +27,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $post->featured = $_POST["urgent"];
         }
         $post->details = $_POST["postDetails"];
+        $post->targetAmount = $_POST["targetAmount"];
     
         if ($post->createPost()) {
             header("Location: ../../index.php");
             exit;
         } else {
-            die("Failed to create post.");
+            header("Location: ../../index.php");
         }
     }
     else if(isset($_POST["editPost"]))

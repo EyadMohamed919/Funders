@@ -49,6 +49,13 @@ if ($transactionResult) {
             <a href="/UserManagementPage.php">User Management</a>
             <a href="/AdminDatabaseTablesPage.php">Database Tables</a>
         <?php endif; ?>
+        <?php 
+        if($canCreatePost)
+        {
+            echo '<a href="/CreatePost.php">Create Post</a>';
+        }
+        ?>
+        
         <a href="/DonationTypePage.php">Donation Type</a>
         <a href="/PaymentPage.php">Payment</a>
         <a href="/Invoice.php">Invoice</a>

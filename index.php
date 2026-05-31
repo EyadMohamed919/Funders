@@ -63,11 +63,12 @@ $isAdmin = isset($_SESSION["CanApproveVerification"]) && $_SESSION["CanApproveVe
             <p>View the latest verified requests from our community.</p>
         </section>
 
-        <div class="post-grid">
-        <?php 
-        require_once __DIR__ . "/src/views/PostView.php";
-        PostView::fetchAllPosts();
-        ?>
+        <div class="donation-container">
+            <?php 
+            require_once __DIR__ . "/src/views/PostView.php";
+            PostView::fetchAllPosts();
+            ?>
+        </div>
     </main>
 
     <footer class="main-footer">

@@ -6,7 +6,7 @@
     <h1>Create New Post</h1>
     <form action="/src/routers/PostRouter.php" method="POST">
         <p>Title: <input type="text" name="title" required></p>
-
+        <p>Target Amount: <input type="number" min="50" name="targetAmount" required></p>
         <p>Category: 
             <select type="number" name="category_id" value="">
                 <?php

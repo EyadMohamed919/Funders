@@ -6,4 +6,10 @@ class CategoryController{
         $category = new CategoryModel();
         return $category->getAllCategories();
     }
+
+    public static function getCategoryName($categoryID)
+    {
+        $category = new CategoryModel();
+        return $category->getCategoryNameByCategoryID($categoryID);
+    }
 }
