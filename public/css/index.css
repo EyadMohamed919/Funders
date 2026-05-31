@@ -154,6 +154,17 @@ body {
     flex-grow: 1;
 }
 
+.donation-category{
+    background-color: #1b4332;
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 20px;
+    margin: auto;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+
 /* Title */
 .donation-title {
     font-size: 1.25rem;
